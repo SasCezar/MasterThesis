@@ -1,7 +1,10 @@
-\documentclass[12pt, a4paper, openright, oneside]{book}
+\documentclass[a4paper,12pt, openright, oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage[paper=a4paper,margin=1in]{geometry}
 
 \usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
 \usepackage{enumitem}
 \usepackage[final]{pdfpages}
 \usepackage{hyperref}
@@ -22,7 +25,58 @@
 \pagestyle{plain} 
 
 \begin{document}
-\includepdf{frontispiece.pdf}
+% \includepdf{frontispiece.pdf}
+\begin{titlepage}
+        
+    \noindent
+    \begin{minipage}[t]{0.19\textwidth}
+        \vspace{-4mm}{\includegraphics[scale=1.15]{images/logo_unimib.pdf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.81\textwidth}
+    {
+            \setstretch{1.42}
+            {\textsc{Università degli Studi di Milano - Bicocca}} \\
+            \textbf{Scuola di Scienze} \\
+            \textbf{Dipartimento di Informatica, Sistemistica e Comunicazione} \\
+            \textbf{Corso di laurea in Informatica} \\
+            \par
+    }
+    \end{minipage}
+    
+\vspace{40mm}
+    
+\begin{center}
+        {\LARGE{
+                \setstretch{1.2}
+                \textbf{Titolo della tesi \\ su più righe}
+                \par
+        }}
+    \end{center}
+    
+    \vspace{50mm}
+
+    \noindent
+    {\large \textbf{Relatore:} Dott. Elisabetta Fersini } \\
+
+    \noindent
+    {\large \textbf{Correlatore:} Prof. Anders S{\o}gaard}
+        
+    \vspace{15mm}
+
+    \begin{flushright}
+        {\large \textbf{Relazione della prova finale di:}} \\
+        \large{Cezar Angelo Sas} \\
+        \large{Matricola 781563} 
+    \end{flushright}
+        
+    \vspace{40mm}
+    \begin{center}
+        {\large{\bf Anno Accademico 2018-2019}}
+    \end{center}
+
+    \restoregeometry
+        
+\end{titlepage}
 \tableofcontents
 \include{Introduction}
 \include{State_of_the_Art}

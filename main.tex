@@ -2,12 +2,16 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{setspace}
-\usepackage[paper=a4paper,margin=1in]{geometry}
+\usepackage{geometry}
+
+\usepackage{natbib}
+\bibliographystyle{acl_bib_style}
+
 
 \usepackage[english]{babel}
 \usepackage{enumitem}
 \usepackage[final]{pdfpages}
-\usepackage{hyperref}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}%
 \usepackage{caption}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -25,9 +29,9 @@
 \pagestyle{plain} 
 
 \begin{document}
-% \includepdf{frontispiece.pdf}
+
 \begin{titlepage}
-        
+    \newgeometry{margin=1in}    
     \noindent
     \begin{minipage}[t]{0.19\textwidth}
         \vspace{-4mm}{\includegraphics[scale=1.15]{images/logo_unimib.pdf}}
@@ -48,12 +52,12 @@
 \begin{center}
         {\LARGE{
                 \setstretch{1.2}
-                \textbf{Titolo della tesi \\ su più righe}
+                \textbf{Zero-Shot Cross-Language Relation Extraction as Multilingual Machine Comprehension}
                 \par
         }}
     \end{center}
     
-    \vspace{50mm}
+    \vspace{40mm}
 
     \noindent
     {\large \textbf{Relatore:} Dott. Elisabetta Fersini } \\
@@ -77,11 +81,23 @@
     \restoregeometry
         
 \end{titlepage}
+
+\restoregeometry
+\newpage
+
+
+
+{\hypersetup{linkcolor=black}
 \tableofcontents
+}
+
 \include{Introduction}
 \include{State_of_the_Art}
+\include{MultiWikiRE}
 \include{Proposed_Solution}
 \include{Experiments}
 \include{Conclusions}
-\include{Bibliography}
+
+\bibliography{references}
+
 \end{document}

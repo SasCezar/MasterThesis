@@ -9,7 +9,7 @@
 
 
 \usepackage[english]{babel}
-\usepackage{enumitem}
+%\usepackage{enumitem}
 \usepackage[final]{pdfpages}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}%
 \usepackage{caption}
@@ -20,6 +20,11 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
+\usepackage{todonotes}
+
+
+\usepackage[inline, shortlabels]{enumitem}
+\setlist{itemjoin ={,\enspace},itemjoin* = { and\enspace}}
 
 
 \newcolumntype{C}{>{\centering\arraybackslash}X}
@@ -83,21 +88,29 @@
 \end{titlepage}
 
 \restoregeometry
-\newpage
 
 
+\pagenumbering{roman}
 
 {\hypersetup{linkcolor=black}
 \tableofcontents
 }
 
+
+
+
+\clearpage
+\pagenumbering{arabic}
+
 \include{Introduction}
-\include{State_of_the_Art}
+\include{Related_Work}
 \include{MultiWikiRE}
 \include{Proposed_Solution}
 \include{Experiments}
 \include{Conclusions}
 
 \bibliography{references}
+
+ 
 
 \end{document}

@@ -1,0 +1,73 @@
+\chapter{Background}
+\label{chpt:2}
+\paragraph{}
+This chapter provides an overview of the different task and concepts needed to perform relation extraction in a multilingual setup. Some concepts, like Word Representation~(Section \ref{sec:word_embedding}) are at the core of NLP, while others are more general machine learning techniques (Section~\ref{sec:transfer_learning} and \ref{sec:zero_learning}). After a brief description of each of these concepts, we will focus on their application in NLP in particular for relation extraction. In the next Chapter we will describe more the task of relation extraction, and present how Natural Language Understanding, a sub-field of NLP that deals with machine reading comprehension, can be used for relation extraction.
+
+% \section{Introduction}
+% Natural Language Processing solutions span form rule based systems~\citep{brill-1992-simple, nebhi2013rulere}, to statistical approaches~\citep{skounakis2003hierarchical}, and also to neural networks~\citep{pawar-etal-2017-end}.
+
+
+
+\section{Word Representation}
+\label{sec:word_embedding}
+\paragraph{}
+Word representation, is a primary part of most Natural Language Processing (NLP) tasks. A word representation is a mathematical object associated with each word, often a vector.  In general, it has been found to be beneficial to represent words or documents as vectors, which have an appealing, intuitive interpretation, and they capture hidden information about a language, like word analogies or semantic. 
+% Based on the literature \citep{turian2010word, schnabel2015embeddings},  \cite{almeida2019word} define word embeddings as a e dense, distributed, fixed-length word vectors, built using word co-occurrence statistics as per the distributional hypothesis
+
+There are various methods to induce word representation:
+
+\begin{itemize}[itemsep = 0.1em]
+\item Distributional word representation: are based on co-occurrence context and on the distributional hypothesis:  ``linguistic items with similar distributions have similar meanings'', hence the similarity is expressed in terms of the similarity of the distribution. Some common representation techniques include Latent Semantic Analysis and Latent Dirichlet Allocation~\citep{bei2003lda, das-etal-2015-gaussian}. \citet{pennington2014glove} propose a competitive set of pre-trained word representations, signalling that word representation had reached the main stream.
+
+\item Distributed representation: are compact, dense and low dimensional representation, where each dimension of the embedding represents a latent feature of the word, hopefully capturing useful syntactic and semantic properties. A distributed representation is compact, in the sense that it can represent an exponential number of clusters in the number of dimensions. Some examples include the work of \citet{Collobert2008} which for the first time demonstrated the utility of word embeddings for downstream tasks and their proposed neural network architecture forms the foundation for many current approaches, or the Word2Vec framework proposed by \citet{mikolov2013distributed} which popularized word embeddings.
+\end{itemize}
+
+In the work ``\textit{Word representations: A simple and general method for semi-supervised learning}'', \citet{turian2010word} define as ``word embeddings'' only the distributed representation, but over time this distinction is not enforced and is common to refer to all word representations as Word Embeddings.
+
+
+\paragraph{}
+Another essential part of NLP is the study of language models. A language model is a statistical model of language usage. It consists mainly of predicting the next word given some previous words. A language model learns the probability of word occurrence based on examples of text. Simpler models may look at a context of a short sequence of words, whereas larger models may work at the level of sentences or paragraphs. Statistical language models suffer from the problem known as curse of dimensionality that appears when the vocabulary size increases. For example, computing the joint probability of 10 consecutive words having a vocabulary size of 100k we have $100000^{10} - 1 = 10^{50} - 1$ free parameters.
+
+\citet{bengio2003nnlm} develop a solution for the course of dimensionality of statistical language models by proposing the first large-scale language model based on neural networks, referred to as Neural Network Language Models (NNLMs). In their work \citet{bengio2003nnlm} bring together language modeling and word embeddings by \begin {enumerate*} [1) ]%
+\item associating each word in the vocabulary with a distributed word vector called ``\textit{feature vector}'' \item express the joint probability function of word sequences in terms of the feature vectors of these words in the sequence; \item learn simultaneously the word feature vector and the parameters of the probability function.
+\end {enumerate*} \citet{bengio2003nnlm} conclude their work by suggesting the use of 
+Recurrent Neural Networks (RNN) to take advantage of temporal structures and also consider longer sequences like entire paragraphs.
+
+\citet{Mikolov2010RecurrentNN} propose a neural language model based on RNN, they use a \textit{simple RNN}, also called Elman network~\citep{elman1990finding} to show how language models based on recurrent networks are significantly better that previous solution. They perform experiments on various speech recognition task, and achieve better results even when training using lower amount of data. 
+
+This work, and the work of \cite{bengio2003nnlm} were followed by many other word embedding solution that use improved versions of RNN like Long Short Term Memory networks~\citep{hochreiter1997long}. We will now present in more detail some of this work. with a focus on the current state of the art word embeddings solution like GloVe, ELMo, and the two we used in our experiments, BERT and fastText.
+
+
+
+% building the feature vectors are build from raw words vectors which are projected onto a so-called \textit{embedding layer}. They train the language model in an unsupervised fashion. 
+
+
+
+\paragraph{ToDo:} Parlare di vari metodi di word embeddings (GloVe, ELMo)
+
+\subsection{fastText}
+\subsection{BERT}
+\subsubsection{Bahdanau et al. 2014}
+\subsubsection{Vaswani et al. 2017}
+
+
+\subsection{Multilingual Word Representation}
+
+
+\section{Transfer Learning}
+\label{sec:transfer_learning}
+\subsection{Cross-lingual Learning}
+\subsection{Multi-task Learning}
+
+\section{Zero-Shot, One-Shot and Few Shot Learning} 
+\label{sec:zero_learning}
+
+\chapter{State of the Art} % Relation Extraction? | Natural Language Understanding
+\label{chpt:3}
+\section{Relation Extraction}
+\subsection{Zero-Shot Relation Extraction}
+\subsection{Multilingual Relation Extraction}
+
+\section{Machine Comprehension}
+\subsection{BiDAF}
+% \subsection{NAMANDA}

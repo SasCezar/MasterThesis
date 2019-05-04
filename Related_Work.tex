@@ -289,12 +289,7 @@ This is the general LSTM; however there are many variants of LSTMs, which perfor
 
 \subsection{Attention mechanism}
 
-\begin{figure}[t]
-        \centering
-        \includegraphics[width=0.5\textwidth]{images/Attention.pdf}
-        \caption{Attention mechanism. The encoder $E$ hidden states are weighted via $a_{i, j}$, summed, and used as input to the decoder $D$ to produce the output at step $t$.}
-        \label{fig:attention}
-\end{figure}%
+
 
 \paragraph{}
 A very popular RNN architecture is the sequence to sequence, or encoder-decoder ~\citep{cho-etal-2014-learning,sutskever2014sequence}. This framework is used in neural machine translation, text summarization, question answering, and many more. 
@@ -318,12 +313,45 @@ A sequence to sequence model is composed by an encoder, which takes the input se
 
 where $h_t$ is the hidden state at time $t$, and $f$ and $q$ are nonlinear functions. Some example of $f$ and $g$ include: LTSMs for $f$, and return the last hidden state for $g$. This part is the same with or without attention mechanism.
 
+\begin{figure}[t]
+        \centering
+        \includegraphics[width=0.5\textwidth]{images/Attention.pdf}
+        \caption{Attention mechanism. The encoder $E$ hidden states are weighted via $a_{i, j}$, summed, and used as input to the decoder $D$ to produce the output at step $t$.}
+        \label{fig:attention}
+\end{figure}%
 
-\paragraph{Decoder:}
+\paragraph{Decoder:} Given a context vector, the decoder computes the probability of a sequence $\textbf{y} = (y_1, \dots, y_T)$ by decomposing the joint probability into the ordered conditionals to the context vector, and the previous outputs.
 
-\paragraph{Decoder with Attention:}
+\begin{equation}
+p(\mathbf{y})=\prod_{t=1}^{T} p\left(y_{t} |\left\{y_{1}, \cdots, y_{t-1}\right\}, c\right)
+\end{equation}
 
-Illustrated in Figure~\ref{fig:attention}
+Which can be implemented using RNNs, where $g$ is a nonlinear function, and $s_t$ is the decoder hidden state:
+
+\begin{equation}
+p(\mathbf{y})=\prod_{t=1}^{T} g\left(y_{t-1}, s_{t}, c\right)
+\end{equation}
+
+\paragraph{Decoder with Attention:} Illustrated in Figure~\ref{fig:attention}, the \cite{bahdanau2014neural} decoder performs the same task as the before, but instead of being conditioned to the context vector and the previous output, the probability of each output is conditioned to the previous outputs, and the entire input sequence.
+
+
+\begin{equation}
+p(\mathbf{y})=\prod_{t=1}^{T} p\left(y_{t} |\left\{y_{1}, \cdots, y_{t-1}\right\}, \textbf{x}\right) = \prod_{t=1}^{T} g\left(y_{t-1}, s_{t}, c_t\right)
+\end{equation}
+
+The new context vector is computed as a weighted sum of the encoder hidden state $(h_1, \dots, h_n)$: 
+
+\begin{equation}
+\begin{split}
+    c_{i} & = \sum_{j=1}^{n} \alpha_{i j} h_{j}\\
+    \alpha_{i j} &= \frac{\exp \left(e_{i j}\right)}{\sum_{k=1}^{T_{x}} \exp \left(e_{i k}\right)} \\
+    e_{i j} &= a\left(s_{i-1}, h_{j}\right)
+\end{split}
+\end{equation}
+
+The weight $\alpha_{i j}$ is a probability that indicates the importance of the $j$-th encoder state $h_j$ with regard to the previous decoder hidden state $s_{i-1}$ to produce the next hidden state $s_i$ and the output of $y_i$ . The weights are computed using a neural network $a$ called alignment model, since~\cite{bahdanau2014neural} proposed this architecture in a neural machine translation task. Having the decoder look at the entire input sequence implements a so-called attention mechanism, which allows the encoder to decide at which part of the input to attend.  By letting the decoder have an attention mechanism, we reduce the encoder responsibility of having to encode all information in the source sequence into a fixed length vector since the decoder can selectively retrieve the useful information in the sequence accordingly to the current state needs.
+
+The idea of having an attention mechanism become very successful in many other NLP task due to the increase in performance it brings. This value in NLP inspired a new model, called Transformer~\citep{vaswani2017attention}, entirely based on it. 
 
 \subsection{Transformer}
 
@@ -364,16 +392,16 @@ P\left(w_{1}, \ldots, w_{m}\right) \approx \prod_{i=1}^{m} P\left(w_{i} | w_{i-n
 
 This approach doesn't generalize to new sequences, unless using some tricks like~\citet{katz1987probablm} did where he computes small $n$-grams, generally $n=3$, and then generalizes to unseen sequences by producing new ones using overlapping n-grams of length up to $n$. However, this solution does not generalize to sequences longer than $n$, which has to be small, and also does not take in consideration the similarities of words. Moreover, statistical language models suffer from the problem known as curse of dimensionality that appears when the vocabulary size increases. For example, computing the joint probability of 10 consecutive words having a vocabulary size of 100k there are $100000^{10} - 1 = 10^{50} - 1$ free parameters. 
 
-\citet{bengio2003nnlm} develop a solution for the course of dimensionality of statistical language models by proposing the first large-scale language model based on neural networks, referred to as Neural Network Language Models (NNLMs). In their work \citet{bengio2003nnlm} bring together language modeling and word embeddings by \begin {enumerate*} [1) ]%
+\citet{bengio2000nnlm} developed a solution for the course of dimensionality of statistical language models by proposing the first large-scale language model based on neural networks, referred to as Neural Network Language Models (NNLMs). In their work \citet{bengio2000nnlm} bring together language modeling and word embeddings by \begin {enumerate*} [1) ]%
 \item associating each word in the vocabulary with a distributed word vector called ``\textit{feature vector}'' \item express the joint probability function of word sequences in terms of the feature vectors of these words in the sequence; \item learn simultaneously the word feature vector and the parameters of the probability function.
-\end {enumerate*} This new representation also generalizes to longer sequences and is able to learn similarities between words. \citet{bengio2003nnlm} conclude their work by suggesting the use of Recurrent Neural Networks (RNN) to take advantage of temporal structures and also consider longer sequences like entire paragraphs.
+\end {enumerate*} This new representation also generalizes to longer sequences and is able to learn similarities between words. \citet{bengio2000nnlm} conclude their work by suggesting the use of Recurrent Neural Networks (RNN) to take advantage of temporal structures and also consider longer sequences like entire paragraphs.
 
-A few years later, \citet{Mikolov2010RecurrentNN} propose a neural language model based on RNN, they use a vanilla RNN~\citep{elman1990finding} to show how language models based on recurrent networks are significantly better that previous solution. They perform experiments on various speech recognition task, and achieve better results even when training using lower amount of data.
+A few years later, \citet{Mikolov2010RecurrentNN} propose a neural language model based on RNN. They use a vanilla RNN~\citep{elman1990finding} to show how language models based on recurrent networks are significantly better that previous solution. They perform experiments on various speech recognition task, and achieve better results even when training using lower amount of data.
 
-This work and the one of \cite{bengio2003nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state of the art use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. We will now present in more detail some of these works using the following architectures: GloVe~\citep{pennington2014glove}, ELMo~\citep{peters2018elmo},and the two we used in our experiments, BERT~\citep{devlin2018bert} and fastText~\citep{bojanowski2016enriching}.
+This work and the one of \cite{bengio2000nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state of the art use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. We will now present in more detail some of these works using the following architectures: GloVe~\citep{pennington2014glove}, ELMo~\citep{peters2018elmo},and the two we used in our experiments, BERT~\citep{devlin2018bert} and fastText~\citep{bojanowski2016enriching}.
 
 
- %Move fT, and BERT in MODEL
+ % Move fT, and BERT in MODEL
 
 \subsection{fastText}
 \subsection{BERT}

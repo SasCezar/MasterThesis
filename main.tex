@@ -9,6 +9,10 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 
+\DeclareMathOperator*{\argmax}{argmax} 
+\DeclareMathOperator*{\argmin}{argmin} 
+
+
 \usepackage{wrapfig}
 
 \usepackage{natbib}
@@ -34,6 +38,8 @@
 
 \usepackage{todonotes}
 
+% \usepackage{lineno}
+% \linenumbers
 
 \usepackage[inline, shortlabels]{enumitem}
 \setlist{itemjoin ={,\enspace},itemjoin* = { and\enspace}}
@@ -77,7 +83,7 @@
     \vspace{40mm}
 
     \noindent
-    {\large \textbf{Relatore:} Dott. Elisabetta Fersini } \\
+    {\large \textbf{Relatore:} Dott. Elisabetta Fersini} \\
 
     \noindent
     {\large \textbf{Correlatore:} Prof. Anders S{\o}gaard}
@@ -116,7 +122,8 @@
 
 \include{Introduction}
 \include{Related_Work}
-\include{MultiWikiRE}
+\include{SotA}
+\include{X-WikiRE}
 \include{Proposed_Solution}
 \include{Experiments}
 \include{Conclusions}

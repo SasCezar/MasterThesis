@@ -1,0 +1,47 @@
+\chapter{State-of-the-Art} % Relation Extraction? | Natural Language Understanding
+\label{chpt:3}
+\paragraph{}
+In this Chapter we will present the state-of-the-art for the relation extraction task (Section~\ref{sec:sota_re}) and for the machine comprehension (Section~\ref{sec:sota_mc}). Each section will give a definition of the task, and present an overview of the solutions adopted to solve the task. We will also show how these solution are adopted in a multilingual setup, and for the relation extraction task, present some literature on the zero-shot scenario.   
+
+
+\section{Relation Extraction}
+\label{sec:sota_re}
+\paragraph{}
+In the following sections we will present the relation extraction task. We will start with a definition, we will present some approaches to solve the task, with examples for both multilingual and zero-shot learning scenarios.
+
+\subsection{Introduction}
+Many applications in information extraction, natural language understanding, information retrieval require an understanding of the semantic relations between entities. This information is usually contained in unstructured data like blogs, news articles, and so on.  Relation extraction aims at making this information usable by other system by extracting the relations contained in unstructured documents and make is available in knowledge bases.
+
+A relation is defined in the form of $r(e_1, e_2, ..., e_n)$ where the $e_i$ are entities in a relation $r$ within document $D$. We will focus on relations with only 2 entities, and refer to the entity pairs and relation as triples, as is common also the use of the following notation $(e_1, r, e_2)$. Since our dataset is built from Wikipedia and Wikidata, throughout this work, we use the term property interchangeably with relation. Given human readable text, relation extraction is the task of identifying instances of relations $r(e_1,e_2)$. For example, in the sentence: ``Elon Musk is the CEO of both Tesla and SpaceX'', a system should be able to extract the relations \textit{chief\_executive\_officer({Elon Musk}, Tesla)}, and \textit{chief\_executive\_officer(Elon Musk, SpaceX)}. 
+
+Simple relation extraction can be achieved using rules, however, rule-based systems require a deep knowledge of the domain and high human annotation time. In the supervised setting~\citep{bach2007review}, depending on the nature of input to the classifier, approaches are further divided into feature based methods and kernel methods. For the feature based systems both the semantic and syntactic features are used as input to the classifier in the form of a feature vector. In~\cite{Kambhatla2004extraction} they use maximum entropy models, or ~\citep{zhao-grishman-2005-extracting, zhou-etal-2005-exploring} uses SVMs trained on the features with different kernel types.
+
+These solution however still rely on human domain knowledge for the definition of the features, this can be solved using end-to-end solutions like in~\citep{miwa-bansal-2016-end, pawar-etal-2017-end}. In an end-to-end relation extraction the system has to identifies both the entities, their type and the relation holding between them, if any.~\cite{miwa-bansal-2016-end} uses a biLSTM on both the word sequences, and tree structures. In~\cite{pawar-etal-2017-end} they train a joint model to predict the boundaries, the type of the entities and the relation between them. 
+
+The clear drawback of supervised methods is the need of training data: data labeling is expensive, and there is often a mismatch between the training data and the data the system will be applied to. A solution to this problem has been proposed in~\citep{plank-moschitti-2013-embedding}. They use domain adaptation techniques, and build a model that uses syntactic tree kernels enriched by lexical semantic.
+
+An alternative type of relation extraction is Open Relation Extraction (Open RE)~\citep{banko2007openre, banko-etzioni-2008-tradeoffs}. Instead of having a fixed set of relations, Open RE aims at extracting relational triples from an open-domain corpus.  In~\citep{banko2007openre} in addition to the introduction of the Open RE task, they propose TextRunner, a large scale relation extraction tool on open domains. TextRunner uses a self-learner to automatically label if there exists a relation between the extracted entities in the text. The examples, both positive and negative are used to train a Naive Bayes classifier. The use of patterns between mentions as relations removes the requirement of supervision and has high flexibility, however it lacks generalization. A solution to the generalization issue is by clustering the surface form of words with similar meaning~\citep{yao-etal-2011-structured}.
+
+\cite{riedel2013relation} remove the need of a defined schema by using Universal Schemas, the union of all involved schemas (surface form predicate as in~\citep{banko2007openre}, and relations in the schema of pre-existing databases). They use solutions from collaborative filtering. In particular they perform matrix factorization on the matrix with entity tuples are rows, and the columns are the union of the surface forms and the DB relations. More formally, they model the probability of two entity $t = (e_1, e_2)$ being in relation $r$ by using an exponential function parametrized by a natural parameter $\theta_{r, t}$:
+
+\begin{equation}
+    P(y_{r, t} = 1 | \theta_{r, t}) = \frac{1}{1+exp(-\theta_{r,t})}
+\end{equation}
+
+the parameter $\theta_{r,t}$ can be computed in different ways (e.g. the the dot product of the latent feature representation of the relation and the tuple).
+
+By defining the matrix using the entity pairs, we can only predict relations between entity seen at train time. \cite{verga-mccallum-2016-row} propose a row-less universal schema. Instead of encoding each pair explicitly, they use aggregation functions over the over the observed instances. The embedding of the pairs can be seen as a summarization of all relation types the entities were seen.
+
+\subsection{Zero-Shot Relation Extraction}
+\cite{goldstein2018zero}
+
+\subsection{Multilingual Relation Extraction}
+\paragraph{}
+Earlier works investigating multilingual relation extraction have been few and far between. \cite{faruqui2015multilingual}, \cite{verga2015multilingual}
+
+\section{Machine Comprehension}
+\label{sec:sota_mc}
+
+% QA also called extractive MC
+\subsection{BiDAF}
+% \subsection{NAMANDA}

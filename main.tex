@@ -2,12 +2,13 @@
 %\usepackage{setspace}
 %\singlespacing
 %\onehalfspacing
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{setspace}
 \usepackage{geometry}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\usepackage{adjustbox} 
 
 \DeclareMathOperator*{\argmax}{argmax} 
 \DeclareMathOperator*{\argmin}{argmin} 
@@ -36,7 +37,6 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
-\usepackage{todonotes}
 
 % \usepackage{lineno}
 % \linenumbers
@@ -116,19 +116,19 @@
 
 
 
-
 \clearpage
 \pagenumbering{arabic}
 
 \include{Introduction}
-\include{Related_Work}
+\include{Background}
 \include{SotA}
 \include{X-WikiRE}
 \include{Proposed_Solution}
-\include{Experiments}
+\include{Results}
 \include{Conclusions}
 
 \bibliography{references}
+
 
  
 

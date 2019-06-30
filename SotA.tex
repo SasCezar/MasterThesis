@@ -1,7 +1,7 @@
 \chapter{State-of-the-Art} % Relation Extraction? | Natural Language Understanding
 \label{chpt:3}
 \paragraph{}
-In this Chapter we will present the state-of-the-art for the relation extraction task (Section~\ref{sec:sota_re}) and for the machine comprehension (Section~\ref{sec:sota_mc}). Each section will give a definition of the task, and present an overview of the solutions adopted to solve the task. We will also show how these solution are adopted in a multilingual setup, and for the relation extraction task, present some literature on the zero-shot scenario.   
+In this Chapter we will present the literature for the relation extraction task (Section~\ref{sec:sota_re}) and for the machine reading comprehension (Section~\ref{sec:sota_mc}). Each section will give a definition of the task, and present an overview of the solutions adopted to solve the task. We will also show how these solution are adopted in a multilingual setup, and for the relation extraction task, present some literature on the zero-shot scenario.   
 
 
 \section{Relation Extraction}
@@ -12,9 +12,9 @@ In the following sections we will present the relation extraction task. We will 
 \subsection{Introduction}
 Many applications in information extraction, natural language understanding, information retrieval require an understanding of the semantic relations between entities. This information is usually contained in unstructured data like blogs, news articles, and so on.  Relation extraction aims at making this information usable by other system by extracting the relations contained in unstructured documents and make is available in knowledge bases.
 
-A relation is defined in the form of $r(e_1, e_2, ..., e_n)$ where the $e_i$ are entities in a relation $r$ within document $D$. We will focus on relations with only 2 entities, and refer to the entity pairs and relation as triples, as is common also the use of the following notation $(e_1, r, e_2)$. Since our dataset is built from Wikipedia and Wikidata, throughout this work, we use the term property interchangeably with relation. Given human readable text, relation extraction is the task of identifying instances of relations $r(e_1,e_2)$. For example, in the sentence: ``Elon Musk is the CEO of both Tesla and SpaceX'', a system should be able to extract the relations \textit{chief\_executive\_officer({Elon Musk}, Tesla)}, and \textit{chief\_executive\_officer(Elon Musk, SpaceX)}. 
+A relation is defined in the form of $r(e_1, e_2, ..., e_n)$ where the $e_i$ are entities in a relation $r$ within document $D$. We will focus on relations with only 2 entities, and refer to the entity pairs and relation as triples, as is common also the use of the following notation $(e_1, r, e_2)$. Since our dataset is built from Wikipedia and Wikidata, throughout this work, we use the term property interchangeably with relation. Given human readable text, relation extraction is the task of identifying instances of relations $r(e_1,e_2)$. For example, in the sentence: ``Elon Musk is the CEO of both Tesla and SpaceX", a system should be able to extract the relations \textit{chief\_executive\_officer({Elon Musk}, Tesla)}, and \textit{chief\_executive\_officer(Elon Musk, SpaceX)}. 
 
-Simple relation extraction can be achieved using rules, however, rule-based systems require a deep knowledge of the domain and high human annotation time. In the supervised setting~\citep{bach2007review}, depending on the nature of input to the classifier, approaches are further divided into feature based methods and kernel methods. For the feature based systems both the semantic and syntactic features are used as input to the classifier in the form of a feature vector. In~\cite{Kambhatla2004extraction} they use maximum entropy models, or ~\citep{zhao-grishman-2005-extracting, zhou-etal-2005-exploring} uses SVMs trained on the features with different kernel types.
+Simple relation extraction can be achieved using rules, however, rule-based systems require a deep knowledge of the domain and high human annotation time. In the supervised setting~\citep{bach2007review}, depending on the nature of input to the classifier, approaches are further divided into feature based methods and kernel methods. For the feature based systems both the semantic and syntactic features are used as input to the classifier in the form of a feature vector. In~\citep{Kambhatla2004extraction} they use maximum entropy models, or ~\citep{zhao-grishman-2005-extracting, zhou-etal-2005-exploring} uses SVMs trained on the features with different kernel types.
 
 These solution however still rely on human domain knowledge for the definition of the features, this can be solved using end-to-end solutions like in~\citep{miwa-bansal-2016-end, pawar-etal-2017-end}. In an end-to-end relation extraction the system has to identifies both the entities, their type and the relation holding between them, if any.~\cite{miwa-bansal-2016-end} uses a biLSTM on both the word sequences, and tree structures. In~\cite{pawar-etal-2017-end} they train a joint model to predict the boundaries, the type of the entities and the relation between them. 
 
@@ -22,7 +22,7 @@ The clear drawback of supervised methods is the need of training data: data labe
 
 An alternative type of relation extraction is Open Relation Extraction (Open RE)~\citep{banko2007openre, banko-etzioni-2008-tradeoffs}. Instead of having a fixed set of relations, Open RE aims at extracting relational triples from an open-domain corpus.  In~\citep{banko2007openre} in addition to the introduction of the Open RE task, they propose TextRunner, a large scale relation extraction tool on open domains. TextRunner uses a self-learner to automatically label if there exists a relation between the extracted entities in the text. The examples, both positive and negative are used to train a Naive Bayes classifier. The use of patterns between mentions as relations removes the requirement of supervision and has high flexibility, however it lacks generalization. A solution to the generalization issue is by clustering the surface form of words with similar meaning~\citep{yao-etal-2011-structured}.
 
-\cite{riedel2013relation} remove the need of a defined schema by using Universal Schemas, the union of all involved schemas (surface form predicate as in~\citep{banko2007openre}, and relations in the schema of pre-existing databases). They use solutions from collaborative filtering. In particular they perform matrix factorization on the matrix with entity tuples are rows, and the columns are the union of the surface forms and the DB relations. More formally, they model the probability of two entity $t = (e_1, e_2)$ being in relation $r$ by using an exponential function parametrized by a natural parameter $\theta_{r, t}$:
+\cite{riedel2013relation} remove the need of a defined schema by using Universal Schemas, the union of all involved schemas (surface form predicate as in~\citep{banko2007openre}, and relations in the schema of pre-existing databases). They model the problem as a probability of a relation holding between two entities, this allows them to use solutions from collaborative filtering. In particular they perform matrix factorization on the matrix with entity tuples are rows, and the columns are the union of the surface forms and the DB relations. More formally, they model the probability of two entity $t = (e_1, e_2)$ being in relation $r$ by using an exponential function parametrized by a natural parameter $\theta_{r, t}$:
 
 \begin{equation}
     P(y_{r, t} = 1 | \theta_{r, t}) = \frac{1}{1+exp(-\theta_{r,t})}
@@ -30,18 +30,116 @@ An alternative type of relation extraction is Open Relation Extraction (Open RE)
 
 the parameter $\theta_{r,t}$ can be computed in different ways (e.g. the the dot product of the latent feature representation of the relation and the tuple).
 
-By defining the matrix using the entity pairs, we can only predict relations between entity seen at train time. \cite{verga-mccallum-2016-row} propose a row-less universal schema. Instead of encoding each pair explicitly, they use aggregation functions over the over the observed instances. The embedding of the pairs can be seen as a summarization of all relation types the entities were seen.
-
-\subsection{Zero-Shot Relation Extraction}
-\cite{goldstein2018zero}
+By defining the matrix using the entity pairs, we can only predict relations between entity seen at train time. \cite{verga-mccallum-2016-row} propose a row-less universal schema. Instead of encoding each pair explicitly, they use aggregation functions over the over the observed instances. The embedding of the pairs can be seen as a summarization of all relation types the entities were seen in.
 
 \subsection{Multilingual Relation Extraction}
 \paragraph{}
-Earlier works investigating multilingual relation extraction have been few and far between. \cite{faruqui2015multilingual}, \cite{verga2015multilingual}
+Earlier works investigating multilingual relation extraction have been few and far between. In \cite{faruqui2015multilingual} they perform multilingual RE by translating the sentences in English and the run a Open RE system. This solution is simple and relies only on the availability of a translator from the target language to English. \cite{verga2015multilingual} uses universal schemas on top of multilingual embeddings to extract relations in a target language without  using  training  data in the target language. 
 
-\section{Machine Comprehension}
+\cite{lin-etal-2017-neural} proposes one of the first neural multilingual solution for RE. They use use an dataset of English articles from Wikipedia, and Chines articles from Baidu Baike (a Chinese-language online encyclopedia). The articles were aligned annotated using Wikidata. They use a sequence-to-sequence model with both a cross-lingual and mono-lingual attention. The cross-lingual attention helps with sentences with strong consistency across the languages.   
+
+\subsection{Zero-shot Relation Extraction}
+\paragraph{}
+\cite{levy2017zero} proposes a new approach to relation extraction that allows zero-shot learning. They propose a novel approach towards achieving this generalization by transforming relations into natural language question templates. This means that we can translate a relation \textit{born\_in(X, Y)} into the question \textit{``When was X born?"}, or \textit{``In what year was X born?"} . Reframing RE as a question answering problem, allows the use of reading comprehension models. In particular, they use BiDAF~\citep{seo2016bidirectional}, a machine comprehension model that uses BiLSTM and attention mechanism to find the answer of a question given a context (more detailed description in Section~\ref{sec:bidaf}). The reading comprehension model is trained using the question, answer, and context examples where the \textit{X} slot is filled with an entity and the \textit{Y} slot is either an answer, if the answer is present in the context, or \texttt{NIL}. The model is then able to extract relation instances from raw text, even for relations which has not been seen during training, enabling zero-shot relation extraction.
+
+Another solution has been proposed by \cite{goldstein2018zero}. They achieve zero-shot relation extraction using word embeddings. They  construct triples $(A, r, B)$, where $A, B$ are matrices where each column vector represents an entity. Entities in the same column but in the other matrix are in relation $r$. The triples are used as a starting point to find other entities that are in the same relation $r$. $A, B$ are obtained by performing bootstrapping using a seed entity on the word embedding vector space. After the small set of entities was found, they are used to generalize to new ones. This is achieved by finding the most common features between all possible pairs on entities, and reducing the space to only these features enabling to find other entities in relation using the distance of the points. A method based on embedding vector space brings different advantages like the ability to find duplicate relation (e.g. misspelled relations), and the ability to correct the model by using the new added information. 
+ 
+
+\section{Machine Reading Comprehension}
 \label{sec:sota_mc}
+\paragraph{}
+In the next sections we will talk about the Machine Reading Comprehension task. We will present the literature and take a closer look at a model, to better understand how these models work.
 
-% QA also called extractive MC
+\subsection{Introduction}
+\paragraph{}
+Childrens' ability to read is evaluated by giving them reading comprehension tests. These test typically consist of a short paragraph followed by questions. The questions are designed in such a way that to answer correctly the reader has to understand the content of the text. Similar tests are also used to measure machine's ability to understand documents. Machine Reading Comprehension (MRC) has gained a lot of interest in the last years with the introduction of sequence-to-sequence models, and datasets like SQuAD~\citep{rajpurkar2016squad, rajpurkar-etal-2018-know}. 
+
+The reading comprehension task easily conforms to a formulation as a supervised learning problem. Specifically, given a context document $c$,  a query $q$ relating to that document, and the answer $a$ to that query,  goal is to estimate the conditional probability $P(a|c, q)$. Depending on the type of the question an the answer, reading comprehension can be of four types:
+
+\begin{itemize}[- ,noitemsep]
+    \item Cloze-style: same as in the Cloze task~\citep{taylor1953cloze}, the question contains placeholder that the system has to fill;
+    \item Multi-choice: the answer can be only one of multiple choices;
+    \item Span-prediction: the machine needs to find the correct answer in the passage by predicting the spans. This category is also referred to as extractive question answering;
+    \item Free-form: the answer is human-generated, so there are some problems with the evaluation.
+\end{itemize}
+
+Traditional systems rely on solutions from information extraction, by detecting predicate argument triples that can later be queried as a relational database~\citep{poon-etal-2010-machine} or pattern matching, and use statistical and mathematical methods to perform similarity between the question and the answer to find the correct answer. For example, in~\citep{riloff-thelen-2000-rule} they propose QUARC (QUestion Answering for Reading Comprehension) a rule-based system that uses lexical and semantic heuristics to look for an indication that a sentence contains the answer to a question. Each type of \textit{``Wh"} question looks for different types of answers, so QUARC uses different sets of rules for each question type. These solutions are not actually understanding a given passage, so they lack the reasoning we would expect from a reading comprehension model.
+
+Recent solution are based on neural networks, and popular architectures like the sequence-to-sequence model. These methods all share a common structure as described in~\citep{qiu2019survey}. The passage and the answer both pass to an embed layer,an encoding one, then the encodings are used together by the match layer, which outputs to the answer layer. The layers role are:
+
+\begin{itemize}[- ,noitemsep]
+    \item Embed layer: this layer converts the words into their representations as seen in Section~\ref{sec:word_embedding};
+    \item Encoding layer: produces a representation of the input, this can be produced using LSTMs, or other sequence encoding models;
+    \item Match layer: captures the interaction between the context and the question, and produces a query-aware context representation;
+    \item Answer layer: it predicts the correct answer, the answer can be of different types as mentioned before.
+\end{itemize}
+
+The use of neural networks solutions, and sequence-to-sequence models for reading comprehension was popularized by~\citep{hermann2015teaching, weston2015memory}. \cite{weston2015memory} proposes a new model architecture called Memory Network. Memory Network, which is a framework with four components \begin {enumerate*} [1) ]
+\item a component that transforms the input into the internal representation 
+\item one that changes the memory states using the input, and the memory
+\item the component that generates the the output features based on the memory, and the input
+\item the last component that decodes the features to predict the output.
+\end {enumerate*} 
+The component can be any model (SVM, NN, etc.). They also propose a Memory Neural Network (MemNN) for the reading comprehension task. 
+
+\cite{hermann2015teaching} uses RNNs with attention mechanism, and proposes two models, the Attentive Reader and the Impatient Reader. The first one encodes the query using bidirectional LSTM and concatenates the results to get the representation of the query. The representation of the document is formed by a weighted sum of the BiLSTM outputs at each time step. The model is completed with the definition of the joint document and query embedding using a nonlinear combination. The Impatient Reader improves the representation of the query by using a the same method employed for the document encoding. 
+
+The two architectures proposed in~\citep{hermann2015teaching} are at the core of many other solutions \citep{kadlec-etal-2016-text, chen-etal-2016-thorough}. In ~\citep{cheng-etal-2016-long}, similarly to ~\citep{weston2015memory}, they increase the memory of the RNN. In particular they use a LSTM with a memory network instead of a single cell, the memory network enables adaptive memory usage and offers a way to weakly induce relations among tokens.
+
+
+
 \subsection{BiDAF}
+\label{sec:bidaf}
+~\cite{levy2017zero} uses as their machine comprehension model BiDAF~\citep{seo2016bidirectional}. BiDAF (Bi-Directional Attention Flow) instead of using a single attention and/or focusing only on small portion of the text like previous solution did, it uses a multi-stage hierarchical process that represents the context and query at different levels of granularity and uses bidirectional attention flow mechanism to obtain a query-aware context representation. It follows the general architecture of all reading comprehensions model.
+
+\subsubsection{Embed Layer}
+Character embedding layer is responsible for mapping each word to a high dimensional vector space. BiDAF uses both character and word level embedding. Given a context $c =\{c_1, \dots, c_T\}$ and a query $q = \{q_1, \dots, q_J\}$, they are separately encoded using the concatenation of the character and word embedding vectors which are passed to a two layer Highway LSTMs~\citep{SrivastavaGS15highway}. The output are the representations of the context $C \in \mathbb{R}^{d\times M}$, and query $Q \in \mathbb{R}^{d\times M}$ at each step. These are passed to the encoding layer.
+
+\subsubsection{Encoding Layer}
+The encoding layer uses a BiLSTM to model the temporal interaction between words. The embeddings from the previous step are further encoded into $H \in \mathbb{R}^{2d\times N}$ for the context, and $U \in \mathbb{R}^{2d\times M}$ for the query. The next step is to find the interaction between them.
+
+
+\subsubsection{Match Layer}
+BiDAF match layer is further divided in two, the attention flow layer, and the modeling layer.
+The former is responsible for finding the relevant information in the context regarding the query, and the vice versa. This is achieved by linking their information using attention. They compute two attention, a context-to-query and a query-to-context, they are a function of similarity matrix $S \in \mathbb{R}^{N\times M}$:
+
+\begin{equation}
+    S_{ij}= \alpha(H_{:u}, U_{:j})
+\end{equation}
+
+where $\alpha$ is a trainable scalar function that encodes the similarity between the vectors $H_{i:}$, and $U_{i:}$. The context-to-query attention is computed using the the attention weights  $a_t = softmax(S_{t:}) \in \mathbb{R}^{J}$ on the query words by $t$-th context word. The final attention matrix is $\tilde{U}$  contains the attended query vectors for the entire context, and $\tilde{U}_{:t}  = \sum_{j}a_{tj}U_{:j}$.
+
+% \begin{equation}
+%         \tilde{U}_{:t}  = \sum_{j}a_{tj}U_{:j} 
+% \label{eq:c2q}
+% \end{equation}
+
+In the query-to-context attention the weights are $b_t = softmax({max}_{col}(S) \in \mathbb{R}^{T}$, and the attended context vector $\tilde{h} = \sum_{t}b_tH_{:t} \in \mathbb{R}^{2d}$ is the weighted sum of the most important words in the context. The final matrix $\tilde{H} \in \mathbb{R}^{2d\times T}$ is a $T$ times stack of $\tilde{h}$.
+
+% $\tilde{U}$ is defined as weighted sum of the rowsoftmax of the matrix $S$ and the encoded context $U$, while the query-to-context $\tilde{U}$, the weights are computed as a $max$ over the columns with softmax, then a weighted sum is performed to obtain  
+
+
+
+% \begin{equation}
+%     \begin{split}
+%         \tilde{H} = [\tilde{h}_1]
+%         \tilde{h}_{:} & = \sum_{n}^{N}b_{n}H_{:n} \\
+%         b & = softmax({maxcol}(S))
+%     \end{split}
+% \label{eq:c2q}
+% \end{equation}
+
+
+Instead of using the attention to summarize the information and risk to loose some of it due to the early stage of the operation, the computed context-to-query, and query-to-context attention together with the embeddings from the encoding layer are used to create a query-aware representation of each context word $G$, where:
+
+\begin{equation}
+    G_{:t} = \beta(H_{:t}, \tilde{U}_{:t}, \tilde{H}_{:t})
+\end{equation}
+
+where $\beta$ is any function. Then $G$ is used as an input by the modeling layer, that uses a two-layer BiLSTM to create the final representation $M$ used for predicting the output.
+
+
+\subsubsection{Answer Layer}
+The answer layer uses a dense neural network with a softmax layer to predict the beginning of the answer in the context, the output of the softmax is also used as an input for an LSTM that predicts the end of the sequence. 
+
 % \subsection{NAMANDA}

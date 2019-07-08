@@ -1,7 +1,8 @@
 \chapter{Background}
 \label{chpt:2}
 \paragraph{}
-This chapter provides an overview of the different task and concepts needed to perform relation extraction in a multilingual setup. Some concepts, like word representation~(Section \ref{sec:word_embedding}) are at the core of NLP, while others are more general machine learning techniques (Section~\ref{sec:nn},~\ref{sec:transfer_learning} and \ref{sec:zero_learning}), others instead are both general and have a very high usage in NLP due to their nature (Section \ref{sec:sequence_modeling}). 
+
+This chapter provides an overview of the different tasks and concepts needed to perform zero-shot relation extraction in a multilingual setup.  Some concepts, like word representation (Section \ref{sec:word_embedding}) are at the core of NLP, while others are more general machine learning techniques (Section~\ref{sec:nn},~\ref{sec:transfer_learning} and \ref{sec:zero_learning}), others instead are both general and have a very high usage in NLP due to their nature of modeling the intrinsic sequential nature of natural languages (Section \ref{sec:sequence_modeling}). 
 
 
 % In the next Chapter we will describe more the task of relation extraction, and present how Natural Language Understanding, a sub-field of NLP that deals with machine reading comprehension, which can be used for relation extraction.
@@ -42,7 +43,7 @@ As in other machine learning algorithms, we have to learn the parameters of our 
 \end{equation}
 
 Now that we have defined what is the goal of our neural network, we can start performing the training. %The learning algorithm for neural network is called backpropagation, from backward propagation of errors. 
-The weights $\theta$ in the network are the only parameters that can be modified to make the cost function $J$ as low as possible; thus we can minimize $J$ by using an iterative process of gradient descent, for which we need to calculate the gradient for the cost function with respect to the network parameters.  As each network consists of various layers, computing the gradient of the loss function w.r.t the parameters $\frac{\partial J}{\partial \theta}$ is non-trivial. To estimate the gradient, we use a an algorithm called backpropagation~\citep{rumelhart1988learning}, from backward propagation of errors. As the name implies, backpropagation starts computing the gradients from the output of the networks and moves backward to the input through all layers. First, we need to compute the derivative of $J(\theta)$ w.r.t the output, this will be our $\partial^{L}$, then go backward:
+The weights $\theta$ in the network are the only parameters that can be modified to make the cost function $J$ as low as possible; thus we can minimize $J$ by using an iterative process of gradient descent, for which we need to calculate the gradient for the cost function with respect to the network parameters.  As each network consists of various layers, computing the gradient of the loss function w.r.t the parameters $\frac{\partial J}{\partial \theta}$ is non-trivial. To estimate the gradient, an algorithm called backpropagation~\citep{rumelhart1988learning}, from backward propagation of errors, is used. As the name implies, backpropagation starts computing the gradients from the output of the networks and moves backward to the input through all layers. First, we need to compute the derivative of $J(\theta)$ w.r.t the output, this will be our $\partial^{L}$, then go backward:
 
 
 
@@ -70,7 +71,7 @@ Traditional neural networks are not designed to deal with the temporal informati
 
 \subsection{Recurrent Neural Network}
 \paragraph{}
-The most elementary neural network for sequential input is the recurrent neural network~\citep{elman1990finding}. Elman proposes a recurrent network based on the idea introduced by~\citet{jordan1986} which proposes a network with recurrent connections from the output to the input; these are one-to-one connections that are used to associate a static pattern with a serially ordered output pattern. Elman modifies the network by moving the recurrent connection. Instead of having the output connected with the input, Elman adds additional units at the input level, these units are called ``\textit{context units}" and are connected to the hidden layer. Context units are also “hidden” in the sense that they interact exclusively with other nodes internal to the network, and not the outside world. 
+The most elementary neural network for sequential input is the recurrent neural network~\citep{elman1990finding}. Elman proposes a recurrent network based on the idea introduced by~\citet{jordan1986} which proposes a network with recurrent connections from the output to the input; these are one-to-one connections that are used to associate a static pattern with a serially ordered output pattern. Elman modifies the network by moving the recurrent connection. Instead of having the output connected with the input, \cite{elman1990finding} adds additional units at the input level, these units are called ``\textit{context units}" and are connected to the hidden layer. Context units are also “hidden” in the sense that they interact exclusively with other nodes internal to the network, and not the outside world. 
 
 In Figure~\ref{fig:rnn} we can have a look at how a RNN works. The network $A$ takes in input $x_t$ and produces an output $h_t$, a loop enables the information to flow from the previous step to the current, allowing the prediction to be affected by the last state of the network. A more effective way to think about RNNs is by unrolling them (right side of Figure~\ref{fig:rnn}). We can formally define $A$ as:
 
@@ -195,11 +196,12 @@ RNN are able to manage variable length of input and output sequences, we can hav
 %     \item Many-to-Many if $l_x \neq l_y, l_x > 1, l_y > 1$, for sequence-to-sequence tasks.
 % \end{itemize}
 
-We can also have bidirectional RNNs~\citep{Schuster1997BiRNN} (BiRNN). A BiRNN is composed of two RNNs, one looks at the sequence starting from the end while the other from the beginning as usual. The output at each step of a bidirectional RNN is the concatenation of the hidden states for that time step. In a BiRNN we have a left-to-right hidden state (or forward state) $\overrightarrow{h_t} = RNN(x_t, \overrightarrow{h}_{t-1})$, a right-to-left one (or backward state) $\overleftarrow{h_t} = RNN(x_t, \overleftarrow{h}_{t-1})$, and the output hidden state $h_t$ is defined as the concatenation of the directional hidden layers: $h_t = [\overrightarrow{h_t}, \overleftarrow{h_t}]$. The advantage of having bidirectional information is quite clear, the model is able to represent also future information, so the current decision is affected by both past and future.
+We can also have bidirectional RNNs~\citep{Schuster1997BiRNN} (BiRNN). A BiRNN is composed of two RNNs, one looks at the sequence starting from the end while the other from the beginning as in the vanilla RNN. The output at each step of a bidirectional RNN is the concatenation of the hidden states for that time step. In a BiRNN we have a left-to-right hidden state (or forward state) $\overrightarrow{h_t} = RNN(x_t, \overrightarrow{h}_{t-1})$, a right-to-left one (or backward state) $\overleftarrow{h_t} = RNN(x_t, \overleftarrow{h}_{t-1})$, and the output hidden state $h_t$ is defined as the concatenation of the directional hidden layers: $h_t = [\overrightarrow{h_t}, \overleftarrow{h_t}]$. The advantage of having bidirectional information is quite clear, the model is able to represent also future information, so the current decision is affected by both past and future.
 
-Recurrent networks have various advantages over traditional networks. These include the ability to process sequences of any length, the size of the model does not increase with the size of the input, and most important, the computation takes into consideration historical information that should allow RNNs to learn long-term dependencies. Unfortunately, they also have some drawbacks. They are computationally more intensive, and even if they can work with sequences of any length and pass information through time, this information transfer starts to become less effective for longer sequences, which means they struggle to model longer-term dependencies. That is caused by the vanishing/explosion of the gradient, a significant issue in vanilla RNN. 
+Recurrent networks have various advantages over traditional NN. These include the ability to process sequences of any length, the size of the model does not increase with the size of the input, and most important, the computation takes into consideration historical information that should allow RNNs to learn long-term dependencies. Unfortunately, they also have some drawbacks. They are computationally more intensive, and even if they can work with sequences of any length and pass information through time, this information transfer starts to become less effective for longer sequences, which means they struggle to model longer-term dependencies. That is caused by the vanishing/explosion of the gradient, a significant issue in vanilla RNN. 
 
-The vanishing gradient problem was first studied by~\cite{Hochreiter:91, bengio1994vanishing}. The problem occurs when we try to train a neural network model using gradient-based optimisation techniques, the backpropagation of the loss function with respect to the weights tends to vanish. This is a consequence of what happens during forward propagation; the hidden state is multiplied several times with the weight matrix, once per time step. So, during backpropagation, this leads to the gradients being multiplied by the same values many times, causing the gradient values to either explode, i.e. grow extremely large or vanish, i.e. become very small, making the model unable to learn. In RNNs this translates to that is very tough to allow the error to flow from the further in time inputs to the ones at the beginning, thus creating difficulties to train the early stages of the RNN and reducing the ability to learn long-term dependencies due to insufficient weight changes. A solution to this problem are the LSTMs.
+\newpage
+The vanishing gradient problem was first studied by~\citep{Hochreiter:91, bengio1994vanishing}. The problem occurs when we try to train a neural network model using gradient-based optimisation techniques, the backpropagation of the loss function with respect to the weights tends to vanish. This is a consequence of what happens during forward propagation; the hidden state is multiplied several times with the weight matrix, once per time step. So, during backpropagation, this leads to the gradients being multiplied by the same values many times, causing the gradient values to either explode, i.e. grow extremely large or vanish, i.e. become very small, making the model unable to learn. In RNNs this translates to that is very tough to allow the error to flow from the further in time inputs to the ones at the beginning, thus creating difficulties to train the early stages of the RNN and reducing the ability to learn long-term dependencies due to insufficient weight changes. A solution to this problem is the use of a more complex logic for updating the internal state of the cell, for example as in the LSTMs.
 
 % \begin{equation}
 % \begin{split}
@@ -254,13 +256,13 @@ The vanishing gradient problem was first studied by~\cite{Hochreiter:91, bengio1
 \end{figure} 
 
 \paragraph{}
-Long Short Term Memory networks (LSTM) are an improved version of RNNs  that introduces mechanisms to decide what should be ``remembered" and ``forgotten". Proposed by~\cite{hochreiter1997long}, LSTMs are a solution to the long-term dependencies issue in vanilla RNN and the vanishing of the gradient. LSTMs mitigate the problem by having a more complex cell that contains two hidden states. The first one is $h_t$ and is similar to the one in RNNs, the other is $C_t$, the cell state, which is the core of a LSTM cell. The cell state is modified using the gates, which are neural networks acting on the information of the cell state and the hidden state. In Figure~\ref{fig:cells} we can see how the information flows and interact with the different gates, these are:
+Long Short Term Memory networks (LSTM) are an improved version of RNNs  that introduce mechanisms to decide what should be ``remembered" and ``forgotten". Proposed by~\cite{hochreiter1997long}, LSTMs are a solution to the long-term dependencies issue in vanilla RNN and the vanishing of the gradient. LSTMs mitigate the problem by having a more complex cell that contains two hidden states. The first one is $h_t$ and is similar to the one in RNNs, the other is $C_t$, the cell state, which is the core of a LSTM cell. The cell state is modified using the gates, which are neural networks acting on the information of the cell state and the hidden state. In Figure~\ref{fig:cells} we can see how the information flows and interact with the different gates, these are:
 
 \begin{itemize}[-]
     \item Forget gate layer ($f$): acts on what and how much to forget from the previous time step. It is computed using a neural network with a sigmoid $\sigma$ activation function. The output of the network is between 0 and 1, since the output will be multiplied element-wise 0 means forget all, and 1 remember all. $f_t = \sigma(W_f * [h_{t-1}, x_t])$;
     \item Input gate layer ($i$): this gate decides which information to write to the cell state. It is a sigmoid layer: $i_t = \sigma(W_i * [h_{t-1}, x_t])$, and works in combination with the gate layer; 
-    \item Gate gate layer ($g$): decides how much to write to the cell state. It is a $\tanh$ layer, $g_t = \sigma(W_g * [h_{t-1}, x_t])$. The output is the multiplied by the input gate output to create a new candidate state cell that will be summed with the value of the previous cell state after the forget step. The new cell state is  $c_t = f_t \odot c_{t-1} + i_t \odot g_t$;
-    \item Output gate layer ($o$): this layer is responsible of how much of the cell state to reveal through the hidden state. This is done using a sigmoid layer which decides the parts of the cell state that will be shown in the output, formally $o_t = \sigma(W_o * [h_{t-1}, x_t])$. Then, we put the cell state through $\tanh$ (to push the values to be between −1 and 1) and multiply it by the output of the output layer, so that we only expose the parts we decided to. Formally, the hidden state will be $h_t = o_t \odot \tanh(c_t)$.
+    \item Gate gate layer ($g$): decides how much to write to the cell state. It is a $\tanh$ layer, $g_t = \sigma(W_g * [h_{t-1}, x_t])$. The output is the multiplied by the input gate's output to create a new candidate state cell that will be summed with the value of the previous cell state after the forget step. The new cell state is  $c_t = f_t \odot c_{t-1} + i_t \odot g_t$;
+    \item Output gate layer ($o$): this layer is responsible of how much of the cell state to reveal through the hidden state. This is done using a sigmoid layer which decides the parts of the cell state that will be shown in the output, formally $o_t = \sigma(W_o * [h_{t-1}, x_t])$. Then, we put the cell state through $\tanh$ (to push the values to be between $-1$ and 1) and multiply it by the output's layer output, so that we only expose the parts we decided to. Formally, the hidden state will be $h_t = o_t \odot \tanh(c_t)$.
 \end{itemize}
 
 
@@ -289,7 +291,7 @@ Long Short Term Memory networks (LSTM) are an improved version of RNNs  that int
 This is the general LSTM; however there are many variants of LSTMs, which perform slightly better or worse depending on the task. A more detailed work on how each variant perform is ``LSTM: A Search Space Odyssey" by~\citet{greff2017lstm}.
 
 
-\subsection{Attention mechanism}
+\subsection{Attention Mechanism}
 \label{sec:encoder_decoder}
 
 
@@ -302,7 +304,7 @@ A very popular RNN architecture is the sequence-to-sequence, or encoder-decoder 
 %         \label{fig:attention}
 % \end{wrapfigure}%
 
-A sequence-to-sequence model is composed by an encoder, which takes the input sequence and compresses it into a context vector which will be used to start the decoder which predicts an output sequence.  A significant and clear disadvantage of a fixed-size context vector design is as the sequence gets longer and longer, more memory is required to store past information but the encoder is unable to represent all of it due to the fixed dimension of the vector. As a result, the network performs poorly on longer sequences~\citep{cho-etal-2014-properties}. A solution to this has been proposed by~\cite{bahdanau2014neural}, by introducing an attention mechanism for the decoder, instead of just relying on the previous hidden state, the decoder with attention can use information from all the input sequence by looking at the encoder hidden state at each time step and combine this information to produce the output.
+A sequence-to-sequence model is composed by an encoder, which takes the input sequence and compresses it into a context vector which will be used to start the decoder which predicts an output sequence.  A significant and clear disadvantage of a fixed-size context vector design is as the sequence gets longer and longer, more memory is required to store past information but the encoder is unable to represent all of it due to the fixed dimension of the vector. As a result, the network performs poorly on longer sequences~\citep{cho-etal-2014-properties}. A solution to this has been proposed by~\cite{bahdanau2014neural}, by introducing an attention mechanism for the decoder, instead of relying only on the previous hidden state, the decoder with attention can use information from all the input sequence by looking at the encoder hidden state at each time step and combine this information to produce the output.
 
 \paragraph{Encoder:} Given a sequence of vectors $\textbf{x} = (x_1, \dots, x_n)$, an RNN takes this sequence and produces a context vector $c$:
 
@@ -382,12 +384,12 @@ Sequence-to-sequence frameworks are state-of-the-art in most of sequence transdu
 
 The transformer has a stack of $N$ encoders (left part of model in Figure~\ref{fig:transformer}), and also $N$ stacks of decoders (right side of Figure~\ref{fig:transformer}). A stack is made up by different sub-layers. 
 
-\paragraph{Encoder:} it has two sub-layers, a multi-head self attention one and a feed forward neural network. Each sub-layer has residual connection~\citep{he2016residual} and, layer normalization~\citep{lei2016normalization}. The output of each sub-layer is $LayerNorm(x + Sublayer(x))$.
+\paragraph{Encoder:} it has two sub-layers, a multi-head self-attention one and a feed forward neural network. Each sub-layer has residual connection~\citep{he2016residual} and, layer normalization~\citep{lei2016normalization}. The output of each sub-layer is $LayerNorm(x + Sublayer(x))$.
 
 \paragraph{Decoder:} it has the same sub-layers as the encoder plus an extra one that performs multi-head attention over the encoder output. The first attention layer is changed to perform a masked version of attention, forcing the prediction at time $t$ to be dependant only on the know outputs.
 
 \paragraph{}
-A big part of the transformer is the multi-head attention (Equation~\ref{eq:multi_attention}). The transformer computes $h$ different attentions. The attentions are computed by projecting the query $Q$, the keys $K$, and the values $V$ $h$ different times resulting in $h$ different attention heads exhibiting different behaviours that seems related to the sentence  structure making each head learn a different task (e.g. anaphora resolution). The heads are then concatenated and projected one last time to get the final result. There are two types of attention in the transformer: the regular encoder-decoder attention, and the self attention. Self-attention, or intra-attention~\citep{cheng-etal-2016-long}, is an attention mechanism relating different positions of a single sequence in order to compute a representation of it, it is used between the sub-layers of both the encoder and the decoder, allowing all the position to attend over all other tokens in the sequence. 
+A big part of the transformer is the multi-head attention (Equation~\ref{eq:multi_attention}). The transformer computes $h$ different attentions. The attentions are computed by projecting the query $Q$, the keys $K$, and the values $V$ $h$ different times resulting in $h$ different attention heads exhibiting different behaviours that seems related to the sentence structure making each head learn a different task (e.g. anaphora resolution). In ~\citep{voita2019analyzing} they showed how, depending on the task, not all heads are necessary for achieving good performance, and they can be pruned based on the specialization they have. The heads are then concatenated and projected one last time to get the final result. There are two types of attention in the transformer: the regular encoder-decoder attention, and the self-attention. Self-attention, or intra-attention~\citep{cheng-etal-2016-long}, is an attention mechanism relating different positions of a single sequence in order to compute a representation of it, it is used between the sub-layers of both the encoder and the decoder, allowing all the position to attend over all other tokens in the sequence. 
 
 \begin{equation}
     \begin{split}
@@ -397,34 +399,34 @@ A big part of the transformer is the multi-head attention (Equation~\ref{eq:mult
     \label{eq:multi_attention}
 \end{equation}
 
-There are state-of-the-art solutions that use the transformer as their construction core, some of these solution are beating multiple NLP challenges without changes to their architecture. A couple examples are BERT~\citep{devlin2018bert}, and OpenAI GPT~\citep{radford2018improving}. 
+There are state-of-the-art solutions that use the transformer as their construction core, some of these solution are beating multiple NLP challenges without changes to their architecture. A couple examples are BERT~\citep{devlin2018bert}, and OpenAI GPT~\citep{radford2018improving, radford2019language}. 
 
 The transformer has also some major drawback, the perk of being parallelizable comes at the cost of loosing the recurrent inductive bias of RNNs, which seems to be essential for generalizing on different sequence modeling tasks of varying complexity. The transformer is also not Turing complete, and lacks conditional processing of the input sequence. Some proposed solution are the Transformer-XL~\citep{dai2019transformerxl} and the Universal Transformer~\citep{dehghani2018universal}. 
 
 \section{Word Representation}
 \label{sec:word_embedding}
 \paragraph{}
-Word representation is an elemental part of most Natural Language Processing (NLP) tasks. The understanding of text is mainly derived by transforming text into usable computational representations, these include graphs, trees, or vectors on which will the focus.   In general, it has been found to be beneficial to represent words or documents as vectors, which have an appealing, intuitive interpretation, and they capture hidden information concerning a language, like word analogies or semantic. 
+Word representation is a fundamental part of most Natural Language Processing (NLP) tasks. The understanding of text is mainly derived by transforming text into usable computational representations, these include graphs, trees, or vectors on which will the focus.   In general, it has been found to be beneficial to represent words or documents as vectors, which have an appealing, intuitive interpretation, and they capture hidden information concerning a language, like word analogies or semantic. 
 %A word representation is a mathematical object associated with each word, often a vector.
 
 % Based on the literature \citep{turian2010word, schnabel2015embeddings},  \cite{almeida2019word} define word embeddings as a e dense, distributed, fixed-length word vectors, built using word co-occurrence statistics as per the distributional hypothesis
 
-A very simple way to transform words into vectors is the one-hot-encoding which consist of having a vector for each word in the vocabulary, the vectors are of size equal to all the words in the vocabulary. This vector will have all entries at 0, except for one which will be the position representing the word, which will be set to 1. 
+A very simple way to transform words into vectors is the one-hot-encoding which consist of having a vector for each word in the vocabulary, the vectors are of size equal to the vocabulary size. This vector will have all entries at 0, except for one which will be the position representing the word, which will be set to 1. 
 
-There are various methods to induce more meaningful word representation, the two main types are count based and prediction based approaches~\citep{baroni-etal-2014-dont}. Or following~\cite{turian2010word} distributional and distributed representation respectively.
+There are various methods to induce more meaningful word representation, the two main types are count based and prediction based approaches~\citep{baroni-etal-2014-dont}, or following~\cite{turian2010word} distributional and distributed representation respectively.
 
 
 \begin{itemize}[- , itemsep = 0.1em]
-\item Count based: are based on co-occurrence context and on the distributional hypothesis:  ``\textit{linguistic items with similar distributions have similar meanings}", hence the similarity is expressed in terms of the similarity of the distribution. Traditional solutions include the creation of a spare matrix containing the association of the word with a context. An example of association is the Pointwise Mutual Information (PMI). The problem with this sparse representation is that become computational inefficient, solution like Singular Value Decomposition help with the reduction of these high dimensional and spare matrices. An important example of count based approach is GloVe~\citep{pennington2014glove} which we will describe in the next paragraphs.
+\item Count based: are based on co-occurrence context and on the distributional hypothesis:  ``\textit{linguistic items with similar distributions have similar meanings}", hence the similarity is expressed in terms of the similarity of the distribution. Traditional solutions include the creation of a sparse matrix containing the association of the word with a context. An example of association is the Pointwise Mutual Information (PMI). The problem with this sparse representation is that become computational inefficient, solution like Singular Value Decomposition help with the reduction of these high dimensional and sparse matrices. An important example of count based approach is GloVe~\citep{pennington2014glove} which will be described in the next paragraphs.
 
 \item Prediction based: 
-The model learn representations by trying to predict the token given the context, or vice versa. Some examples include the work of \citet{collobert2008a} which for the first time demonstrated the utility of word embeddings for downstream tasks and their proposed neural network architecture forms the foundation for many current approaches, and the Word2Vec framework ~\citep{mikolov2013models,mikolov2013distributed} which popularized word embeddings.
+the model learn representations by trying to predict the token given the context, or vice versa. Some examples include the work of \citet{collobert2008a} which for the first time demonstrated the utility of distributed representation for downstream tasks and their proposed neural network architecture forms the foundation for many current approaches, and the Word2Vec framework ~\citep{mikolov2013models,mikolov2013distributed} which popularized word embeddings.
 \end{itemize}
 
 \cite{levy-etal-2015-improving} shows that both count and prediction methods have the same performance, without one overtaking the other.
 
 
-In the work ``\textit{Word representations: A simple and general method for semi-supervised learning}", \citet{turian2010word} define as ``\textit{word embeddings}" only the distributed representation (prediction based), but over time this distinction is not enforced and is common to refer to all vector word representations as word embeddings. 
+In the work ``\textit{Word representations: A simple and general method for semi-supervised learning}", \citet{turian2010word} define as ``\textit{word embeddings}" only the distributed representation (prediction based), but over time this distinction is not enforced and it is common to refer to all vector word representations as word embeddings. 
 
 % \begin{itemize}[itemsep = 0.1em]
 % \item Distributional word representation: are based on co-occurrence context and on the distributional hypothesis:  ``\textit{linguistic items with similar distributions have similar meanings}", hence the similarity is expressed in terms of the similarity of the distribution. Some common representation techniques include Latent Semantic Analysis~\citep{deerwester1990indexing} and Latent Dirichlet Allocation~\citep{bei2003lda}. An important example is the work of \citet{pennington2014glove} which propose a competitive set of pre-trained word representations, his work signals that word representation had reached the main stream.
@@ -444,14 +446,14 @@ More formally, the goal of a statistical language model is to learn the probabil
 P\left(w_{1}, \ldots, w_{m}\right)=\prod_{i=1}^{m} P\left(w_{i} | w_{1}, \dots, w_{i-1}\right)
 \end{equation}
 
-Because the number of words that precede a word varies, and because it is difficult to compute $P(w_i | w_1,\dots, w_{i-1})$ with $i$ large, we typically condition the probability of a word on a window of n previous words ($n$-grams): 
+Because the number of words that precede a word varies, and because it is difficult to compute $P(w_i | w_1,\dots, w_{i-1})$ with $i$ large, we typically condition the probability of a word on a window of $n$ previous words ($n$-grams): 
 
 
 \begin{equation}
 P\left(w_{1}, \ldots, w_{m}\right) \approx \prod_{i=1}^{m} P\left(w_{i} | w_{i-n}, \dots, w_{i-1}\right)
 \end{equation}
 
-Unfortunately, this approach doesn't generalize to new sequences, unless using some tricks like~\citet{katz1987probablm} did where he computes small $n$-grams, generally $n=3$, and then generalizes to unseen sequences by producing new ones using overlapping $n$-grams of length up to $n$. However, this solution does not generalize to sequences longer than $n$, which has to be small, and also does not take in consideration the similarities of words. Moreover, statistical language models suffer from the problem known as curse of dimensionality that appears when the vocabulary size increases. For example, computing the joint probability of 10 consecutive words having a vocabulary size of 100k there are $100000^{10} - 1 = 10^{50} - 1$ free parameters. 
+Unfortunately, this approach doesn't generalize to new sequences, unless using some tricks like~\citet{katz1987probablm} did where they compute small $n$-grams, generally $n=3$, and then generalizes to unseen sequences by producing new ones using overlapping $n$-grams of length up to $n$. However, this solution does not generalize to sequences longer than $n$, which has to be small, and also does not take in consideration the similarities of words. Moreover, statistical language models suffer from the problem known as curse of dimensionality that appears when the vocabulary size increases. For example, computing the joint probability of 10 consecutive words having a vocabulary size of 100k there are $100000^{10} - 1 = 10^{50} - 1$ free parameters. 
 
 \citet{bengio2000nnlm} developed a solution for the course of dimensionality of statistical language models by proposing the first large-scale language model based on neural networks, referred to as Neural Network Language Models (NNLMs). In their work \citet{bengio2000nnlm} bring together language modeling and word embeddings by \begin {enumerate*} [1) ]
 \item associating each word in the vocabulary with a distributed word vector called ``\textit{feature vector}" \item express the joint probability function of word sequences in terms of the feature vectors of these words in the sequence; \item learn simultaneously the word feature vector and the parameters of the probability function.
@@ -459,7 +461,7 @@ Unfortunately, this approach doesn't generalize to new sequences, unless using s
 
 A few years later, \citet{Mikolov2010RecurrentNN} propose a neural language model based on RNN. They use a vanilla RNN~\citep{elman1990finding} to show how language models based on recurrent networks are significantly better that previous solution. They perform experiments on various speech recognition task, and achieve better results even when training using lower amount of data.
 
-This work and the one of \cite{bengio2000nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state-of-the-art solutions use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. There are two types of embeddings, the first one is general embeddings which are not dependent on the context like Word2Vec~\citep{mikolov2013models,mikolov2013distributed}, GloVe~\citep{pennington2014glove}, and fastText~\citep{bojanowski2016enriching}; the second is context dependent embeddings, these are the new state-of-the-art solution and include ELMo~\citep{peters2018elmo}, and BERT~\citep{devlin2018bert}. We will present fastText and BERT in Section~\ref{sec:w_e} since are the embeddings we compare for our solution. Now, we will present Word2Vec, GloVe, and ELMo.
+This work and the one of \cite{bengio2000nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state-of-the-art solutions use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. There are two types of embeddings, the first one is general embeddings which are not dependent on the context like Word2Vec~\citep{mikolov2013models,mikolov2013distributed}, GloVe~\citep{pennington2014glove}, and fastText~\citep{bojanowski2016enriching}; the second is context dependent embeddings, these are the new state-of-the-art solution and include ELMo~\citep{peters2018elmo}, and BERT~\citep{devlin2018bert}. We will present fastText and BERT in Section~\ref{sec:w_e} as we compare their multilingual versions for the zero-shot relation extraction task. Now, we will present Word2Vec, GloVe, and ELMo.
 
 
 \paragraph{Word2Vec} \cite{mikolov2013models} proposes two log-linear models, the skip-gram (SG), and the Continuous Bag-of-Words (CBOW). Skip-gram model trains a network to predict the word given the context in which the word appears. While the CBOW does the inverse, it predicts the context of a word given that word. The network is a feedforword neural network with one hidden unit. We have an input layer which is projected onto a hidden layer using a matrix $W$, the word embeddings matrix, then the hidden layer is projected to the output layer using a matrix $\tilde{W}$, which is the word context embeddings. 
@@ -497,7 +499,7 @@ where $\sigma$ is the sigmoid function and $k$ is the number of negative samples
 ~\cite{levy2014embedding_pmi} show how SG with negative sampling is an implicit factorization of the Pointwise Mutual Information matrix, which is a count based        method.
 
 \paragraph{GloVe} 
-Global Vector~\citep{pennington2014glove} is a embedding method based on co-occurrence matrix factorization. GloVe use a co-occurrence matrix $C$, where an entry $C_{ij}$ is the number of times word $x_i$ appears in the context of word $x_j$. They use it to compute a probability matrix $P$ of a word of being in the context of another word, where $P_{ij}$ is the probability of word $x_i$ being in the context of word $w_j$. The main idea is that word meanings are captured by the ratios of co-occurrence probabilities rather than the probabilities themselves, they want to model a function $F$ that is able to approximate this ratio using the word vectors, and context word vectors.
+Global Vector~\citep{pennington2014glove} is an embedding method based on co-occurrence matrix factorization. GloVe use a co-occurrence matrix $C$, where an entry $C_{ij}$ is the number of times word $x_i$ appears in the context of word $x_j$. They use it to compute a probability matrix $P$ of a word of being in the context of another word, where $P_{ij}$ is the probability of word $x_i$ being in the context of word $w_j$. The main idea is that word meanings are captured by the ratios of co-occurrence probabilities rather than the probabilities themselves, they want to model a function $F$ that is able to approximate this ratio using the word vectors, and context word vectors.
 
 \begin{equation}
 F\left(\mathbf{w}_{i}, \mathbf{w}_{j}, \tilde{\mathbf{w}}_{k}\right)=\frac{P_{i k}}{P_{j k}}
@@ -522,7 +524,7 @@ J_{GloVe} = \sum_{i, j=1}^{|V|} f\left(C_{i j}\right)\left(\mathbf{w}_{i}^{T} \t
 
 \paragraph{ELMo} Proposed by ~\cite{peters2018elmo}, it is a deep contextualized word representation model. Instead of having a fixed embedding that represents a word, contextualized embeddings are a function of the input sequence and are able to model information like polysemy.
 
-ELMo uses a bidirectional language model (biLM) on top of which a task specific representation is created. The contextualized representation is a function of the hidden states of the biLM. Given a biLM with $L$ layers, it computes a set of $2L+1$ representations for each token $t_k$:
+ELMo uses a bidirectional language model (BiLM) on top of which a task specific representation is created. The contextualized representation is a function of the hidden states of the BiLM. Given a BiLM with $L$ layers, it computes a set of $2L+1$ representations for each token $t_k$:
 
 \begin{equation}
 \begin{split}
@@ -537,7 +539,7 @@ where $h_{k0}^{LM} = x_k^{LM}$ (the token representation from the language model
 \mathbf{E} \mathbf{L} \mathbf{M} \mathbf{o}_{k}^{task}=E\left(R_{k} ; \Theta^{task}\right)=\gamma^{t a s k} \sum_{j=0}^{L} s_{j}^{task} \mathbf{h}_{k, j}^{LM}
 \end{equation}
 
-where  $E$ is a function for creating task specific embeddings parametrized by $\Theta$. An generic example is the weighted sum. The weights $s^{task}$ in the linear combination are learned for each end task and normalized by softmax. The scaling factor $\gamma^{task}$ is used to correct the misalignment between the distribution of the biLM hidden states and the distribution of task specific representations.
+where  $E$ is a function for creating task specific embeddings parametrized by $\Theta$. An generic example is the weighted sum. The weights $s^{task}$ in the linear combination are learned for each end task and normalized by softmax. The scaling factor $\gamma^{task}$ is used to correct the misalignment between the distribution of the BiLM hidden states and the distribution of task specific representations.
 
 
 
@@ -545,7 +547,7 @@ where  $E$ is a function for creating task specific embeddings parametrized by $
 \label{sec:transfer_learning}
 
 \paragraph{}
-In this section we will introduce the definition and the types of transfer learning based on the survey of~\cite{pan2010transfer}, and the thesis of~\cite{ruder2019neural} in which he applies transfer learning techniques to NLP. We will start with the general definition of transfer learning, present an overview of the different types, and then focus our attention on the techniques we will use in our work. 
+In this section we will introduce the definition and the types of transfer learning based on the survey of~\cite{pan2010transfer}, and the thesis of~\cite{ruder2019neural} in which he applies transfer learning techniques to NLP. We will start with the general definition of transfer learning, present an overview of the different types, and then focus our attention on the techniques we will use in this work. 
 
 
 \subsection{Introduction}
@@ -557,7 +559,7 @@ consists of a label space $\mathcal{Y}$, a prior distribution $P(Y)$, a conditio
 
 Given a source domain $\mathcal{D}_S$ and learning task $\mathcal{T}_S$, a target domain $\mathcal{D}_T$ and learning task $\mathcal{T}_T$, transfer learning aims to help improve the learning of the target conditional probability $P_T(Y_T|X_T)$ in $\mathcal{D}_T$ using the knowledge from $\mathcal{D}_S$ and $\mathcal{T}_S$, where $\mathcal{D}_S \neq \mathcal{D}_T$, or $\mathcal{T}_S \neq \mathcal{T}_T$.
 
-Since the domain and task are tuples, the inequality conditions in the transfer learning definition allows for for five different scenarios grouped in two major settings:
+Since the domains and tasks are tuples, the inequality conditions in the transfer learning definition allows for five different scenarios grouped in two major settings:
 
 \begin{enumerate}[a -]
     \item Inductive learning: the target task is different from the source task, while the source and target domains may or may not be the same. This setting labeled data in the target domain are required to induce a model.
@@ -589,7 +591,7 @@ Since the domain and task are tuples, the inequality conditions in the transfer 
 \paragraph{}
 Traditional machine learning problems rely on a single model, which introduce the risk of ignoring critical source of inductive bias. ~\cite{caruana1993mtl} proposes a new learning paradigm based on the idea that related tasks can be used as sources of mutual inductive bias. By introducing this bias, the learning could be faster and more accurate. This approach is called multi-task learning (MTL), or joint learning. 
 
-Given a multitask problem consisting of $m$ tasks $X = \{T_{1}, \dots, T_{m}\}$. For task $T_i$, its training dataset contains $n_i$ examples $X_i = \{x_{i, 1}, \dots, x_{i, n_i}\}$ as well as their labels $Y_i = \{y_{i, 1}, \dots, y_{i, n_i}\}$. The learning function for task $T_i$ is defined as $f_i(x, w_i)$, and $W = \{w_1, \dots, w_n\}$. The function to optimize all the task is:
+Given a multi-task problem consisting of $m$ tasks $X = \{T_{1}, \dots, T_{m}\}$. For task $T_i$, its training dataset contains $n_i$ examples $X_i = \{x_{i, 1}, \dots, x_{i, n_i}\}$ as well as their labels $Y_i = \{y_{i, 1}, \dots, y_{i, n_i}\}$. The learning function for task $T_i$ is defined as $f_i(x, w_i)$, and $W = \{w_1, \dots, w_n\}$. The function to optimize all the task is:
 
 \begin{equation}
 \min_{W} \sum_{i=1}^{m} \frac{1}{n_{i}} \sum_{j=1}^{n_{i}} \mathcal{L}\left(y_{i, j}, f_i(x_{i,j}, w_i)\right) + \lambda\Omega_W
@@ -616,10 +618,10 @@ There are different techniques to perform sequential transfer learning, but we w
 
 \subsubsection{Fine-tuning}
 \paragraph{}
-Fine-tuning is a method of adaptation of trained models by updating pretrained models using new data. Is more expensive that other sequential transfer solution like feature extraction, but it requires very little task-specific changes and allows the reuse of more general task to model more specific ones.
+Fine-tuning is a method of adaptation of trained models by updating pretrained models using new data. It is more expensive than other sequential transfer solution like feature extraction, but it requires very little task-specific changes and allows the reuse of more general task to model more specific ones.
 Some solution for fine-tuning consists in training a network and then reuse the first $n$ layers for another task by retraining them allowing the gradient to propagate through some or all the layers. This solution is not very effective in all tasks since the model could start forgetting due to the high gradients backpropagating at the beginning of the training phase for the new task. One solution is to gradually unfreeze the layers starting from the higher ones going to the first ones, allowing the gradient to change the task specific layer more drastically than the more general. 
 
-In~\citep{howard-ruder-2018-universal} they propose a method for Universal Language Model Fine-Tuning (ULMFiT) for text classification. Fine-tuning language models has been difficult, due to issues with the required amount of data, and problems with overfitting on smaller dataset or forgetting. ULMFiT solves these problems by proposing novel solutions on like discriminative fine tuning, which manages how the learning rate is set using across different layers, making general layers update less that more specific ones. Moreover, they propose a slanted triangular learning rate, that changes with the number of iteration by first rapidly increase until a specific threshold, at which it decrease slowly. They also use the gradual unfreezing. All these solution allow to train a classifier by just using hundreds of in domain documents.
+In~\citep{howard-ruder-2018-universal} they propose a method for Universal Language Model Fine-Tuning (ULMFiT) for text classification. Fine-tuning language models has been difficult, due to issues with the required amount of data, and problems with overfitting on smaller dataset or forgetting. ULMFiT solves these problems by proposing novel solutions on like discriminative fine tuning, which manages how the learning rate is set across different layers, making general layers update less than more specific ones. Moreover, they propose a slanted triangular learning rate, that changes with the number of iteration by first rapidly increase until a specific threshold, at which it starts to slowly decrease. They also use the gradual unfreezing. All these solution allow to train a classifier by just using hundreds of in domain documents.
 
 \subsection{Cross-lingual Learning}
 \paragraph{}
@@ -627,13 +629,15 @@ Cross-lingual learning aims at extracting information from data in a label-scarc
 
 In the past years, the number of multilingual works has increased, creating more resource and showing increases in performance for various. An example is XNLI, a cross-lingual natural language inference dataset proposed by~\cite{conneau2018xnli} that is used to evaluate textual entailment models. Parallel resources also allow for better multilingual representation, that are effective features for cross-lingual models.
 
-Most of the work on multilingual representation has been on word level, on which we will focus in the next section. However, there are also sentence level representations, such as in~\citep{conneau2018xnli} where they train the target language encoder to represent sentences in the same space as the source language encoder, allowing the transfer.   
+\newpage
+
+Most of the work on multilingual representation has been on word level, on which we will focus in the next section. However, there are also sentence level representations, such as in~\citep{conneau2018xnli} where they train the target language encoder to represent sentences in the same space as the source language encoder, allowing the transfer. Similarly, \cite{atetxe2018massively} train an encoder to represent sentences in a space that is agnostic from the language, but they pretrain the decoder on parallel corpora and concatenate a language ID to the decoder input that specifies the language to generate the output for.
 
 \subsubsection{Cross-lingual Word Representation}
 
-Multilingual word representation are a useful way to transfer knowledge across languages. Cross-lingual word representation aims at having a common space where word translations are close. This usually requires some amount of supervision, like small bilingual lexicon, but in the recent years solutions with no supervision appeared~\citep{lample2018translation}.
+Cross-lingual word representation are a useful way to transfer knowledge across languages by providing a common representation for word in different languages. This usually requires some amount of supervision, like small bilingual lexicon, but in the recent years solutions with no supervision appeared~\citep{lample2018translation}.
 
-A simple count based solution that does not require parallel corpora was proposed by~\cite{sogaard2015inverted}, they use Wikipedia as their multilingual corpora and, based on the idea that the same word translated appears in the same Wikipedia articles in the corresponding language, they build an inverted index matrix by taking the articles common across all languages the embeddings will be created. Finally, they perform dimensionality reduction on the inverted indexing matrix.
+An interesting count based solution that does not require parallel corpora was proposed by~\cite{sogaard2015inverted}, they use Wikipedia as their multilingual corpora and, based on the idea that the same word translated appears in the same Wikipedia articles in the corresponding language, they build an inverted index matrix by taking the articles common across all languages the embeddings will be created. Finally, they perform dimensionality reduction on the inverted indexing matrix.
 
 Another solution consists in aligning the vector spaces of the languages. Word alignments are generally modeled as a linear mapping, which are constrained such that the structure of the initial monolingual spaces is left unchanged. When having a parallel lexicon, one solution~\citep{mikolov2013exploiting} to find a linear transformation can be minimizing:
 
@@ -660,7 +664,7 @@ In this section, we will present an overview of zero-shot learning. It studies h
 
 \subsection{Introduction}
 \paragraph{}
-Classification is one of the main tasks in machine learning; it is straightforward: given an example consisting of various feature, assign a label to the example. Thus, it has been thoroughly studied in different domains and tasks, from computer vision to natural language processing.  The main issue with this setup is that it does not generalize to new labels. Zero-shot learning~\citep{larochelle2008zeroshot} can be seen as an extreme version of Few-shot learning, and One-shot learning~\citep{miller2002oneshot}.
+Classification is one of the main tasks in machine learning; it is straightforward: given an example consisting of various feature, assign a label to the example. Thus, it has been thoroughly studied in different domains and tasks, from computer vision to natural language processing.  The main issue with this setup is that it does not generalize to new labels. Zero-shot learning~\citep{larochelle2008zeroshot} can be seen as an extreme version of few-shot learning, and one-shot learning~\citep{miller2002oneshot}.
 
 In their survey, ~\citet{xian2017zero} define the zero-shot learning task as follows: Given a training set $\mathcal{S} = \{(x_1, y_1), \dots, (x_n, y_n)\}$, with $y_i \in Y^{tr}$ the training set classes, the task is to learn a function $f: X \rightarrow Y$ that minimizes the loss function $J(\theta)$,and $F$ is a compatibility function that gives how compatible the input and the label are: 
 
@@ -681,6 +685,8 @@ F(x, y ; \theta)=\gamma(x)^{T} \theta \phi(y)
 
 where $\gamma$ is the input embedding, and $\phi$ the label embedding (e.g word embedding of the image label). 
 
+
+\newpage
 \subsection{Zero-shot in NLP}
 \paragraph{}
 Many works in NLP use zero-shot learning methods for different tasks, for example 

@@ -1,5 +1,14 @@
-\chapter{Conclusions and Future Work}
+\chapter{Conclusions}
 \label{chpt:7}
+\paragraph{}
+In this thesis we introduce a new, large-scale multilingual dataset (\textbf{X-WikiRE}) of reading comprehension-based RE for English, German, French, Spanish, and Italian, facilitating research on multilingual methods for RE. Using this, we experimented with various setup using NAMANDA, a nil-aware machine reading comprehension model. We used NAMANDA in two different setups: transfer learning and joint learning. The experiments demonstrated that \begin{enumerate*}[a) , font=\bfseries]
+    \item  multilingual training can be employed to exploit the fact that KBs are better populated in different areas for different languages, providing a strong cross-lingual supervision signal which leads to considerably better zero-shot relation extraction
+    \item models can be transferred cross-lingually with a minimal amount of target language data for fine-tuning
+    \item better modelling of nil-awareness in reading comprehension models leads to improvements on the task
+\end{enumerate*}
 
 
-This thesis introduced 
+Our work is a step towards making KBs equally well-resourced across languages. Future work may include the use of better multilingual embeddings with higher coverage, as we saw affects the performances in the zero-shot scenario drastically. Moreover, will be interesting to expand the dataset to more languages, in particular to true low-resourced ones. 
+
+
+% Our dataset covers more languages (five) and is at least an order of magnitude larger than existing multilingual RE datasets, e.g., TAC 2016 \citep{ellis2015overview}, which covers three languages and consists of $\approx$ 90k examples. We also a) perform cross-lingual RE showing that models pretrained on one language can be effectively transferred to others with minimal in-language finetuning; b) leverage multilingual representations to train a model capable of simultaneously performing (zero-shot) RE in all five languages, rivaling or outperforming its monolingually trained counterparts in many cases while requiring far fewer parameters per language; c) obtain considerable improvements by employing a more carefully designed nil-aware machine comprehension model. 

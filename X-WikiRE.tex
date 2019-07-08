@@ -1,15 +1,15 @@
 \chapter{X-WikiRE}
 \label{chpt:4}
 \paragraph{}
-In this chapter we will describe how we built X-WikiRE. We will start by describing the datasources used, Wikipedia and Wikidata. Next, we will describe the process we used to combine these resources to obtain automatically annotated data for different languages. As final step, we will describe how to increase the number of examples by creating different templates. In the last section, we will show some descriptive statistics about X-WikiRE.
+In this chapter we will describe how we built \textbf{X-WikiRE}. We will start by describing the datasources used, Wikipedia and Wikidata. Next, we will describe the process we used to combine these resources to obtain automatically annotated data for different languages. As final step, we will describe how to increase the number of examples by creating different templates. In the last section, we will show some descriptive statistics about \textbf{X-WikiRE}.
 
 \section{Introduction}
 \paragraph{}
-Supervised training of deep neural networks often requires large amounts of high-quality training data which are difficult to obtain.  To fix this, ~\cite{hewlett2016wikireading} exploited Wikidata~\citep{vwikidata} and Wikipedia to create large amounts of distantly annotated data for various natural understanding tasks. \cite{levy2017zero} use WikiReading as a starting point for building a large scale reading-comprehension based dataset for relation extraction. Based on these two works we build X-WikiRE, a new large scale multilingual reading-comprehension based dataset for relation extraction. X-WikiRE is available in English, Spanish, Italian, German, and French, and is also on at least a magnitude order larger than other multilingual resources for RE.
+Supervised training of deep neural networks often requires large amounts of high-quality training data which are difficult to obtain.  To fix this, ~\cite{hewlett2016wikireading} exploited Wikidata~\citep{vwikidata} and Wikipedia to create large amounts of distantly annotated data for various natural understanding tasks. \cite{levy2017zero} use WikiReading as a starting point for building a large scale reading-comprehension based dataset for relation extraction. Based on these two works we build \textbf{X-WikiRE}, a new large scale multilingual reading-comprehension based dataset for relation extraction. \textbf{X-WikiRE} is available in English, Spanish, Italian, German, and French, and is also on at least a magnitude order larger than other multilingual resources for RE.
 
 \section{Datasources}
 \paragraph{}
-Our datasources are Wikipedia, and Wikidata. Wikidata it's a free collaborative knowledge base that is available in more than 300 languages. It's value has long been obvious, with many efforts to use it. The Wikidata approach is to crowd source data acquisition, allowing a global community to edit it's content, making it a good quality resource.  Wikipedia is a online encyclopedia with articles available, as for Wikidata, in more than 300 languages. Wikipedia consists of textual articles describing entities. %Wikidata provides dumps in different data formats, spanning from XML, Turtle, NTriples, and JSON. We choose the latter and describe below it's datamodel. Instead Wikipedia only provides XML dumps, which can be converted to JSON using existing tools\footnote{\url{https://www.mediawiki.org/wiki/Alternative_parsers}}, but we opted to scrape them since the output provided by these tools is sometimes too noisy or require some changes to allow the merge with Wikidata.
+Our datasources are Wikipedia, and Wikidata. Wikidata it is a free collaborative knowledge base that is available in more than 300 languages. Its value has long been obvious, with many efforts to use it. The Wikidata approach is to crowd source data acquisition, allowing a global community to edit it's content, making it a good quality resource.  Wikipedia is a online encyclopedia with articles available, as for Wikidata, in more than 300 languages. Wikipedia consists of textual articles describing entities. %Wikidata provides dumps in different data formats, spanning from XML, Turtle, NTriples, and JSON. We choose the latter and describe below it's datamodel. Instead Wikipedia only provides XML dumps, which can be converted to JSON using existing tools\footnote{\url{https://www.mediawiki.org/wiki/Alternative_parsers}}, but we opted to scrape them since the output provided by these tools is sometimes too noisy or require some changes to allow the merge with Wikidata.
 
 % The two used sources are are different in both size, and contained information. We can have a quick recap in Table~\ref{tab:datasets}. The next two sections will present a more in detail description of these resources.
 
@@ -45,7 +45,7 @@ The next step is the querification, that allows to obtain different examples for
 \newpage
 \subsection{Querification}
 \paragraph{}
-Now that we have the entity, the value and the context, the challenge is to convert the relation and the entity into question for the machine comprehension model (Table~\ref{table:qa_examples}). ~\cite{levy2017zero} created 1192 questions template for 120 relations. A templated question, is a question with a placeholder for the entity, for example for property \textit{author}, we can have following template \textit{``Who wrote X?''}, where \textit{X} is the entity placeholder, for example ``\textit{Divina Commedia}''. So we have that our example are made by a question,  $question \approx template(property,x))$, a context, and the answer. 
+Now that we have the entity, the value and the context, the challenge is to convert the relation and the entity into a question for the machine comprehension model (Table~\ref{table:qa_examples}). ~\cite{levy2017zero} created 1192 questions template for 120 relations. A templated question, is a question with a placeholder for the entity, for example for property \textit{author}, we can have following template \textit{``Who wrote X?''}, where \textit{X} is the entity placeholder, for example ``\textit{Divina Commedia}''. So we have that our example are made by a question,  $question \approx template(property,x))$, a context, and the answer. 
 
 We consider the same 120 properties as \cite{levy2017zero}, for English we used the templates they created, while for the remaining languages we used human annotators to translate the templates. The annotators were instructed to take a look at the 1192 templates and try to translate them into their language, they were allowed to discard translation that did not make sense, and also create templates inspired by the original templates. 
 In  addition  to  the  entity placeholder, some languages with richer morphology  (Spanish,  Italian,  and  German)  required  extra placeholders in the templates because of agreement  phenomena  (gender).    We  added  a  placeholder  for  definite  articles,  as  well  as  one  for gender-dependent filler words. The gender is automatically inferred from the Wikipedia page statistics and a few heuristics. For example, for Italian, the property \textit{born\_in}, will have a template \textit{``Quando è natZ X?"}, where depending on the gender of \textit{X}, \textit{Z} can be either \textit{o} or \textit{a}, giving \textit{``nato"} for masculine words, and \textit{``nata"} for feminine ones.
@@ -55,7 +55,7 @@ This process created different amount of templates and so the number of examples
 
 
 \paragraph{}
-The process to create X-WikiRE allows to easily construct a similar dataset also for other low resource languages. The only annotation required is the translation of the questions, which can be done using automated translation tools, or turks for a reasonable cost~\citep{levy2017zero}.
+The process to create \textbf{X-WikiRE} allows to easily construct a similar dataset also for other low resource languages. The only annotation required is the translation of the questions, which can be done using automated translation tools, or turks for a reasonable cost~\citep{levy2017zero}.
 
 
 \begin{table}[t]
@@ -82,7 +82,7 @@ IT       & Di quale nazione fa parte il \textbf{Rio delle Amazzoni}?            
 \section{Dataset Statistics}
 \label{sec:data_stats}
 \paragraph{}
-X-WikiRE covers  more  languages  (five)  and  is  at  least  an  order of magnitude larger than existing multilingual relation extraction datasets,  e.g.  TAC 2016~\citep{ellis2015overview}, which  covers  three  languages  and  consists  of approximately 90K examples. Instead our dataset provides millions of triples, and if we also consider the templates, the amount of examples raises at ten of millions as we can see in Table~\ref{table:datasetstats}.
+\textbf{X-WikiRE} covers  more  languages  (five)  and  is  at  least  an  order of magnitude larger than existing multilingual relation extraction datasets,  e.g.  TAC 2016~\citep{ellis2015overview}, which  covers  three  languages  and  consists  of approximately 90K examples. Instead our dataset provides millions of triples, and if we also consider the templates, the amount of examples raises at ten of millions as we can see in Table~\ref{table:datasetstats}.
 
 \begin{table}[h!]
 \fontsize{12}{12}\selectfont
@@ -142,7 +142,7 @@ Since we will compare our solution against the one of \cite{levy2017zero}, we co
           & IT    & 40 & 35 & 35 \\
     \bottomrule
     \end{tabular}%
-    \caption{Avarage number of tokens in the context.}
+    \caption{Average number of tokens in the context.}
   \label{tab:addlabel}%
 \end{table}%
 

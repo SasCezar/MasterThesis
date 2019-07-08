@@ -15,7 +15,7 @@ Our goal is to answer three different questions: \begin{enumerate*}[a) , font=\b
 
 \section{Evaluation}
 \paragraph{}
-We use the same evaluation methodology as ~\cite{levy2017zero}. We compute the precision, recall, and F1-score by comparing the spans of the answers predicted by the model with the ground truth answer span. The measure don't take in consideration the word order and punctuation but articles are not removed from the evaluation as separating them from entities is not as trivial for other languages as it is for English.
+We use the same evaluation methodology as ~\cite{levy2017zero}. We compute the precision, recall, and F1-score by comparing the spans of the answers predicted by the model with the ground truth answer span. The measure does not take in consideration the word order and punctuation but articles are not removed from the evaluation as separating them from entities is not as trivial for other languages as it is for English.
 
 \begin{equation}
     precision = \frac{\textit{\# of matching content words}}{\textit{\# of content words in predicted answer}}
@@ -174,11 +174,11 @@ We train a model for each language on the full monolingual training set (1 milli
 \newpage
 \subsection{Cross-lingual Model Transfer}
 \paragraph{}
-In this set of experiments, seen in Figure 4a, we test how well RE models can be transferred from a source language with a large number of training examples to target languages with no or minimal training data (question \textbf{a}). 
+In this set of experiments, we test how well RE models can be transferred from a source language with a large number of training examples to target languages with no or minimal training data (question \textbf{a}). 
 
-In the \textbf{UnENT} experiments, we construct pairwise parallel test and development sets between English and each of the languages, meaning that the entities that are in the English and the target train/dev set are non present in the target test set. Then an English relation extraction model, built  on  top  of  the  multilingual representations, is trained on a full English training set (1 million instances). A similar approach is followed also for the \textbf{UnREL} scenario, in this case the train/dev sets don't contain any relation that is in the target's language test set.
+In the \textbf{UnENT} experiments, we construct pairwise parallel test and development sets between English and each of the languages, meaning that the entities that are in the English and the target train/dev set are non present in the target test set. Then an English relation extraction model, built  on  top  of  the  multilingual representations, is trained on a full English training set (1 million instances). A similar approach is followed also for the \textbf{UnREL} scenario, in this case the train/dev sets do not contain any relation that is in the target's language test set.
 
-The results presented in Table~\ref{table:bigtable} are for the cross-lingual transfer \textbf{UnENT} experiments. While it is clear that the models suffer from rather low recall when no fine-tuning is performed,  the  results  show considerable  improvements when performing fine-tuning with just 1000 target language examples. When using 10K target language examples, it is possible to nearly match the performance of a model trained on the full target language monolingual training set. In Figure~\ref{fig:UnEntF1}, we can have better view of the performances when using fastText.
+The results presented in Table~\ref{tab:lang_model_coverage} are for the cross-lingual transfer \textbf{UnENT} experiments. While it is clear that the models suffer from rather low recall when no fine-tuning is performed,  the  results  show considerable  improvements when performing fine-tuning with just 1000 target language examples. When using 10K target language examples, it is possible to nearly match the performance of a model trained on the full target language monolingual training set. In Figure~\ref{fig:UnEntF1}, we can have better view of the performances when using fastText.
 
 \begin{figure*}[h!]
 \centering

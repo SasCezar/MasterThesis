@@ -1,6 +1,6 @@
 # MasterThesis
 
-Work done while visiting CoAStaL Lab in Copenhagen.
+Work done while visiting CoAStaL Lab @ the University of Copenhagen.
 
 
 Cite:

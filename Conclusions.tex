@@ -1,14 +1,13 @@
 \chapter{Conclusions}
 \label{chpt:7}
 \paragraph{}
-In this thesis we introduce a new, large-scale multilingual dataset (\textbf{X-WikiRE}) of reading comprehension-based RE for English, German, French, Spanish, and Italian, facilitating research on multilingual methods for RE. Using this, we experimented with various setup using NAMANDA, a nil-aware machine reading comprehension model. We used NAMANDA in two different setups: transfer learning and joint learning. The experiments demonstrated that \begin{enumerate*}[a) , font=\bfseries]
-    \item  multilingual training can be employed to exploit the fact that KBs are better populated in different areas for different languages, providing a strong cross-lingual supervision signal which leads to considerably better zero-shot relation extraction
-    \item models can be transferred cross-lingually with a minimal amount of target language data for fine-tuning
-    \item better modelling of nil-awareness in reading comprehension models leads to improvements on the task
-\end{enumerate*}
+Given the widely lamented fact that KBs and resources are highly skewed towards English causing difficulties in the development of NLP system for low-resource languages, in this thesis we introduced a new large-scale multilingual dataset (\textbf{X-WikiRE}) for relation extraction. It is a reading comprehension-based relation extraction dataset for five languages: English, German, French, Spanish, and Italian. We hope that \textbf{X-WikiRE} will facilitate the research on multilingual methods for relation extraction. \textbf{X-WikiRE} is at least an order of magnitude larger than previous multilingual datasets. We used \textbf{X-WikiRE} to  experiment with various transfer learning setup using a state-of-the-art nil-aware machine reading comprehension model to perform zero-shot relation extraction. We evaluated the use of our resource using two different setups: transfer learning and joint learning. The experiments demonstrated that: \begin{enumerate}[a) , font=\bfseries, noitemsep]
+    \item  multilingual training can be employed to exploit the fact that KBs are better populated in different areas for different languages, providing a strong cross-lingual supervision signal which leads to considerably better zero-shot relation extraction;
+    \item models can be transferred cross-lingually with a minimal amount of target language data for fine-tuning;
+    \item better modelling of nil-awareness in reading comprehension models leads to improvements on the task.
+\end{enumerate}
 
-
-Our work is a step towards making KBs equally well-resourced across languages. Future work may include the use of better multilingual embeddings with higher coverage, as we saw affects the performances in the zero-shot scenario drastically. Moreover, will be interesting to expand the dataset to more languages, in particular to true low-resourced ones. 
+Our work is a step towards making KBs equally well-resourced across languages. Future work may include the use of better multilingual embeddings with higher coverage, as we saw affects the performances in the zero-shot scenario drastically. Moreover, it will be interesting to expand the dataset to more languages, in particular to true low-resourced ones. 
 
 
 % Our dataset covers more languages (five) and is at least an order of magnitude larger than existing multilingual RE datasets, e.g., TAC 2016 \citep{ellis2015overview}, which covers three languages and consists of $\approx$ 90k examples. We also a) perform cross-lingual RE showing that models pretrained on one language can be effectively transferred to others with minimal in-language finetuning; b) leverage multilingual representations to train a model capable of simultaneously performing (zero-shot) RE in all five languages, rivaling or outperforming its monolingually trained counterparts in many cases while requiring far fewer parameters per language; c) obtain considerable improvements by employing a more carefully designed nil-aware machine comprehension model. 

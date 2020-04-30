@@ -1,19 +1,23 @@
-\chapter{Results}
+\chapter{Experimental Evaluation}
 \label{chpt:6}
 \paragraph{}
-In this chapter we will present the experiments that we performed to evaluate our system. We analyze the results, and present some problems of our approach.
+In this chapter we present the experiments that we performed to evaluate our system. We analyze the results, and present some problems of our approach.
 
 
-Using our multilingual relation extraction dataset \textbf{X-WikiRE}, we evaluate two types of settings, the \textbf{UnENT} in which the model is tested on unseen entities as in traditional relation extraction systems, and the zero-shot setting \textbf{UnREL} in which the model performance are evaluated on unseen relations (the entities may or may not been seen at training).
+Using our multilingual relation extraction dataset \textbf{X-WikiRE}, we evaluate two types of settings:
+\begin{itemize}
+    \item \textbf{UnENT} in which the model is tested on unseen entities as in traditional relation extraction systems, and the zero-shot setting
+    \item  \textbf{UnREL} in which the model performance are evaluated on unseen relations (the entities may or may not been seen at training).
+\end{itemize}
 
 Our goal is to answer three different questions: \begin{enumerate*}[a) , font=\bfseries]
     \item how well relation extraction models can be transferred across different languages?
     \item can the variance in the number of relations examples between languages help  build more robust relation extraction models?
-    \item can a jointly trained model that performs RE on multiple languages perform equally or better than the monolingual trained version?
+    \item can a jointly trained model that performs RE on multiple languages perform equally or better than the monolingual trained version? 
 \end{enumerate*}
 
-
-\section{Evaluation}
+\section{Experimental Setting}
+\subsection{Metrics}
 \paragraph{}
 We use the same evaluation methodology as ~\cite{levy2017zero}. We compute the precision, recall, and F1-score by comparing the spans of the answers predicted by the model with the ground truth answer span. The measure does not take in consideration the word order and punctuation but articles are not removed from the evaluation as separating them from entities is not as trivial for other languages as it is for English.
 
@@ -34,7 +38,7 @@ We use the same evaluation methodology as ~\cite{levy2017zero}. We compute the p
 \label{eq:f1}
 \end{equation}
 
-\section{Hyperparameters}
+\subsection{Hyperparameters}
 \paragraph{}
 In all experiments, models were trained for five epochs with a learning rate of $1.0$ using Adam \citep{kingma2014adam} as optimizer with $\beta_1 = 0.01, \beta_2 = 0.999$, $\epsilon = 1e - 8$. For finetuning in the cross-lingual transfer experiments, the learning rate was lowered to $0.001$ to prevent forgetting and a maximum of $30$ iterations over the small target language training set were performed with model selection using the target language development set F1-score. 
 
@@ -44,7 +48,7 @@ The embeddings used are from the multilingual fastText, except when comparing ag
 
 \section{Word Representation}
 \paragraph{}
-We compared the two multilingual word-embedding solution presented in Section~\ref{sec:w_e} to find which of them is the best solution for our task. To compare these two solution we use a fine-tuning setup as described in Section~\ref{sec:xlingual}. Table~\ref{table:resultsunentcompare} shows the results for our model in the \textbf{UnENT} scenario using both multilingual BERT and fastText. As we can see, BERT performs poorly compared to fastText in every language and almost for each of the fine-tuning settings. 
+We compared the two multilingual word embedding models presented in Section~\ref{sec:w_e} to find which of them is the best solution for our task. To compare these two solution we used the \textit{ Cross-lingual Model Transfer} setup described in Section~\ref{sec:xlingual}. The model is first trained using 1M examples on a high resource language (English) then fine-tuning on the target language is performed. The fine-tuning is performed with different amount of examples, the settings are: zero-shot (0 examples), 1K, 2K, 5K, and 10K. Table~\ref{table:resultsunentcompare} shows the results for our model in the \textbf{UnENT} scenario using both multilingual BERT and fastText. As we can see, BERT performs poorly compared to fastText in every language and almost for each of the fine-tuning settings. 
 
 \begin{table}[h!]
 \centering
@@ -113,13 +117,13 @@ A reason of this can be the high difference in word coverage. As shown in Table 
 
 \end{table}%
 
+\newpage
 
-
-\section{Architectures}
+\section{Transfer Setups}
 \paragraph{}
 We perform experiments of the two previously described architectures to see how well each scenario perform in different types of multilingual and cross-lingual transfer. We also present the results for the monolingual setup, and use it as a comparison for the multilingual models. 
 
-\newpage
+
 \subsection{Monolingual}
 \paragraph{}
 We train a model for each language on the full monolingual training set (1 million of instances), the model will be used as a comparison for the multilingual and the cross-lingual transfer models. Table~\ref{table:baseline} presents the results obtained for both the \textbf{UnENT} and \textbf{UnREL} scenarios. The monolingual should be seen as a ceiling, as the other models will be trained with less data.
@@ -171,7 +175,7 @@ We train a model for each language on the full monolingual training set (1 milli
 
 
 
-\newpage
+
 \subsection{Cross-lingual Model Transfer}
 \paragraph{}
 In this set of experiments, we test how well RE models can be transferred from a source language with a large number of training examples to target languages with no or minimal training data (question \textbf{a}). 
@@ -202,7 +206,7 @@ The \textbf{UnREL} is a considerably more challenging setting, we are interested
 \subsection{One Model, Multiple Languages}
 \paragraph{}
 We now evaluate the model jointly trained on multiple languages. We are interested in exploiting the fact that KBs are better populated for different properties across different languages (question \textbf{c})
-. We perform a 5-folds cross-validation, in each experiment a test set relation for a particular language is not seen in that language's training set, but may be seen in any of the other languages. This amounts to maintaining the original zero-shot setting (where a relation is not seen) monolingually, but providing supervision by allowing the models to \textit{peek across languages}.  To control for training set size we include 200K training instances per language, so that the total size of the training set is equal to that of the monolingual baseline. However, an additional benefit of multilingual training is that extra overall training data becomes available. To test the effect of that we also run an experiment where the full training set of each of the languages is employed (adding up to 5 million training examples).
+. We perform a 5-folds cross-validation, in each experiment a test set relation for a particular language is not seen in that language's training set, but may be seen in any of the other languages. This amounts to maintaining the original zero-shot setting (where a relation is not seen) monolingually, but providing supervision by allowing the models to \textit{peek across languages}.  To control for training set size we include 200K training instances per language (Multi. (S)), so that the total size of the training set is equal to that of the monolingual baseline. However, an additional benefit of multilingual training is that extra overall training data becomes available. To test the effect of that we also run an experiment where the full training set of each of the languages is employed, adding up to 5 million training examples (Multi. (L)).
 
 In the \textbf{UnENT} setting the multilingual models trained on just 200k instances per language perform slightly below the monolingual baselines. This excludes for French where, surprisingly, the baseline performance is actually exceeded. When the full training sets of all languages are combined, the multilingual model outperforms the monolingual baselines for English, Spanish, and French and is slightly worse for German and Italian. This demonstrates that not only is it possible to utilize a single model to perform RE in multiple languages, but that the multilingual supervision signal will often lead to improvements in performance. These results are shown in the third and fourth columns of Table \ref{table:bigtable}. 
 
@@ -254,9 +258,9 @@ This is largely in line with our premise that the natural topicality of KBs acro
 \end{table}
 
 
-\section{Comparison with \cite{levy2017zero}}
+\section{Reading Comprehension Model}
 \paragraph{}
-To evaluate how the reading comprehension model affects the performances, we compared NAMANDA with \cite{levy2017zero}. For the comparison we used their dataset, and trained both system in a monolingual fashion using GloVe embeddings. The results presented in Table~\ref{table:comparison} are in line with these presented in \citep{kundu2018namanda}, however these results are higher than when using \textbf{X-WikiRE}, this is a consequence of the differences in the datasets, the embeddings and the training. \textbf{X-WikiRE} context are a bit longer than these in ~\cite{levy2017zero} (Table~\ref{tab:addlabel}), moreover the coverage of GloVe is higher. Also, the main difference is that in our setup we only used 5-folds instead of 10-folds, meaning that the model sees less unique relations during the training phase and is also tested on more.   
+To evaluate how the reading comprehension model affects the performances, we compared NAMANDA (Monolingual) with the nil-aware BiDAF~\citep{levy2017zero}. For the comparison we used their dataset, and trained both system in a monolingual fashion using GloVe embeddings. The results presented in Table~\ref{table:comparison} are in line with these presented in \citep{kundu2018namanda}, however these results are higher than when using \textbf{X-WikiRE}, this is a consequence of the differences in the datasets, the embeddings, and the training. \textbf{X-WikiRE} context are a bit longer than these in ~\cite{levy2017zero} (Table~\ref{tab:addlabel}), moreover the coverage of GloVe is higher. Also, the main difference is that in our setup we only used 5-folds instead of 10-folds, meaning that the model sees less unique relations during the training phase and is also tested on more.   
 
 
 \begin{table*}[h!]
@@ -268,7 +272,7 @@ To evaluate how the reading comprehension model affects the performances, we com
     \toprule
     \multirow{2}{*}{Lang.} & &  \multicolumn{2}{c|}{UnENT} & \multicolumn{2}{c}{UnREL} \\
 
-     &  &  \cite{levy2017zero} & NAMANDA &  \cite{levy2017zero} & NAMANDA \\
+     &  &  \cite{levy2017zero} & Monolingual &  \cite{levy2017zero} & Monolingual \\
      \midrule
      
     \multirow{3}{*}{EN*} & P  & 87.66 & \textbf{90.49} & 43.61 & \textbf{56.53} \\

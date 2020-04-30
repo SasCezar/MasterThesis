@@ -2,9 +2,9 @@
 
 Although the vast majority of knowledge bases (KBs) are heavily biased towards English, Wikipedias do cover very different topics in different languages. Exploiting this, we introduce a new multilingual dataset (X-WikiRE), framing relation extraction as a multilingual machine reading problem. We show that by leveraging this resource it is possible to robustly transfer models cross-lingually and that multilingual support significantly improves (zero-shot) relation extraction, enabling the population of low-resourced KBs from their well-populated counterparts.
 
-Read the full thesis from the [MaterThesis.pdf](/MaterThesis.pdf)
+Read the full thesis from the [MasterThesis.pdf](/MasterThesis.pdf) file.
 
-Check: [X-WikiRE](https://github.com/SasCezar/XWikiRE) repository for the code on how to create the dataset
+Check: [X-WikiRE](https://github.com/SasCezar/XWikiRE) repository for the code on how to create the dataset.
 
 Work done while visiting CoAStaL Lab @ the University of Copenhagen.
 

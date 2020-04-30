@@ -1,19 +1,19 @@
 \chapter{State-of-the-Art} % Relation Extraction? | Natural Language Understanding
 \label{chpt:3}
 \paragraph{}
-In this Chapter we will present the literature for the relation extraction task (Section~\ref{sec:sota_re}) and for the machine reading comprehension (Section~\ref{sec:sota_mc}). Each section will give a definition of the task, and present an overview of the solutions adopted to solve the task. We will also show how techniques are adopted in a multilingual setup, and for the relation extraction task, present some literature on the zero-shot scenario.   
+In this Chapter we present the literature for the relation extraction task (Section~\ref{sec:sota_re}) and for the machine reading comprehension (Section~\ref{sec:sota_mc}). Each section gives a definition of the task, and present an overview of the solutions adopted to solve the task. We also show how techniques are adopted in a multilingual setup, and for the relation extraction task, present some literature on the zero-shot scenario.   
 
 
 \section{Relation Extraction}
 \label{sec:sota_re}
 \paragraph{}
-In the following sections we will present the relation extraction task. We will start with a definition, we will present some approaches to solve the task, with examples for both multilingual and zero-shot learning scenarios.
+In the following sections we present the relation extraction task. We start with a definition, and present some approaches to solve the task. We present works for both multilingual and zero-shot learning scenarios.
 
 \subsection{Introduction}
 \paragraph{}
 Many applications in information extraction, natural language understanding, information retrieval require an understanding of the semantic relations between entities. This information is usually contained in unstructured data like blogs, news articles, and so on.  Relation extraction aims at making this information usable by other system by extracting the relations contained in unstructured documents and make is available in knowledge bases.
 
-A relation is defined in the form of $r(e_1, e_2, ..., e_n)$ where the $e_i$ are entities in a relation $r$ within document $D$. We will focus on relations with only 2 entities, and refer to the entity pairs and relation as triples, as is common also the use of the following notation $(e_1, r, e_2)$. Since our dataset is built from Wikipedia and Wikidata, throughout this work, we use the term property interchangeably with relation. Given human readable text, relation extraction is the task of identifying instances of relations $r(e_1,e_2)$. For example, in the sentence: ``Elon Musk is the CEO of both Tesla and SpaceX", a system should be able to extract the relations \textit{chief\_executive\_officer({Elon Musk}, Tesla)}, and \textit{chief\_executive\_officer(Elon Musk, SpaceX)}. 
+A relation is defined in the form of $r(e_1, e_2, ..., e_n)$ where the $e_i$ are entities in a relation $r$ within document $D$. We focus on relations with only 2 entities, and refer to the entity pairs and relation as triples, as is common also the use of the following notation $(e_1, r, e_2)$. Since our dataset is built from Wikipedia and Wikidata, throughout this work, we use the term property interchangeably with relation. Given human readable text, relation extraction is the task of identifying instances of relations $r(e_1,e_2)$. For example, in the sentence: ``Elon Musk is the CEO of both Tesla and SpaceX", a system should be able to extract the relations \textit{chief\_executive\_officer({Elon Musk}, Tesla)}, and \textit{chief\_executive\_officer(Elon Musk, SpaceX)}. 
 
 Simple relation extraction can be achieved using rules, however, rule-based systems require a deep knowledge of the domain and high human annotation time. In the supervised setting~\citep{bach2007review}, depending on the nature of input to the classifier, approaches are further divided into feature based methods and kernel methods. For the feature based systems both the semantic and syntactic features are used as input to the classifier in the form of a feature vector. In~\citep{Kambhatla2004extraction} they use maximum entropy models, or ~\citep{zhao-grishman-2005-extracting, zhou-etal-2005-exploring} uses SVMs trained on the features with different kernel types.
 
@@ -50,7 +50,8 @@ Another solution has been proposed by \cite{goldstein2018zero}. They achieve zer
 \section{Machine Reading Comprehension}
 \label{sec:sota_mc}
 \paragraph{}
-In the next sections we will talk about the Machine Reading Comprehension task. We will present the literature and take a closer look at a model, to better understand how these models work.
+In the next sections we present the Machine Reading Comprehension task. We 
+introduce the literature and take a closer look at a model, to better understand how these models work.
 
 \subsection{Introduction}
 \paragraph{}

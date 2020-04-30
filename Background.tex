@@ -23,7 +23,7 @@ A neuron is defined by an input $x$, a set of weights $W$, a bias $b$, and an ac
 \end{equation}
 
 
-Feed forward neural networks are composed by various layers, each layer contains some neurons. The formal definition is very similar to the one of the neuron. To simplify the notation, we will include the bias term in the weights matrix, and have an extra element $x_0 = 1$ in the input $x$. Given a feed forward neural network with $L$ layers, the forward propagation is: 
+Feed forward neural networks are composed by various layers, each layer contains some neurons. The formal definition is very similar to the one of the neuron. To simplify the notation, we include the bias term in the weights matrix, and have an extra element $x_0 = 1$ in the input $x$. Given a feed forward neural network with $L$ layers, the forward propagation is: 
 
 \begin{equation}
 \begin{split}
@@ -91,7 +91,7 @@ In Figure~\ref{fig:rnn} we can have a look at how a RNN works. The network $A$ t
 \end{equation}
 
 Where, $h_t$ is the new state, $f_W$ and $g_\theta$ are functions with parameters $W$ and $\theta$ respectively, $h_{t-1}$ is the previous state, $x_t$ is the current input, and $y_t$ is the output at the \textit{t-th} step.
-The vanilla RNN is defined using a neural network with $\tanh$ as activation function, so we will have:
+The vanilla RNN is defined using a neural network with $\tanh$ as activation function, so we have:
 
 \begin{equation}
 \begin{split}
@@ -411,7 +411,7 @@ Word representation is a fundamental part of most Natural Language Processing (N
 
 % Based on the literature \citep{turian2010word, schnabel2015embeddings},  \cite{almeida2019word} define word embeddings as a e dense, distributed, fixed-length word vectors, built using word co-occurrence statistics as per the distributional hypothesis
 
-A very simple way to transform words into vectors is the one-hot-encoding which consist of having a vector for each word in the vocabulary, the vectors are of size equal to the vocabulary size. This vector will have all entries at 0, except for one which will be the position representing the word, which will be set to 1. 
+A very simple way to transform words into vectors is the one-hot-encoding which consist of having a vector for each word in the vocabulary, the vectors are of size equal to the vocabulary size. This vector have all entries at 0, except for one which is the position representing the word, which is set to 1. 
 
 There are various methods to induce more meaningful word representation, the two main types are count based and prediction based approaches~\citep{baroni-etal-2014-dont}, or following~\cite{turian2010word} distributional and distributed representation respectively.
 
@@ -461,7 +461,7 @@ Unfortunately, this approach doesn't generalize to new sequences, unless using s
 
 A few years later, \citet{Mikolov2010RecurrentNN} propose a neural language model based on RNN. They use a vanilla RNN~\citep{elman1990finding} to show how language models based on recurrent networks are significantly better that previous solution. They perform experiments on various speech recognition task, and achieve better results even when training using lower amount of data.
 
-This work and the one of \cite{bengio2000nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state-of-the-art solutions use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. There are two types of embeddings, the first one is general embeddings which are not dependent on the context like Word2Vec~\citep{mikolov2013models,mikolov2013distributed}, GloVe~\citep{pennington2014glove}, and fastText~\citep{bojanowski2016enriching}; the second is context dependent embeddings, these are the new state-of-the-art solution and include ELMo~\citep{peters2018elmo}, and BERT~\citep{devlin2018bert}. We will present fastText and BERT in Section~\ref{sec:w_e} as we compare their multilingual versions for the zero-shot relation extraction task. Now, we will present Word2Vec, GloVe, and ELMo.
+This work and the one of \cite{bengio2000nnlm} were followed by many other word embeddings solutions that build upon their methods, in particular current state-of-the-art solutions use RNN, or improved versions like Long Short Term Memory networks~\citep{hochreiter1997long}. There are two types of embeddings, the first one is general embeddings which are not dependent on the context like Word2Vec~\citep{mikolov2013models,mikolov2013distributed}, GloVe~\citep{pennington2014glove}, and fastText~\citep{bojanowski2016enriching}; the second is context dependent embeddings, these are the new state-of-the-art solution and include ELMo~\citep{peters2018elmo}, and BERT~\citep{devlin2018bert}. We will present fastText and BERT in Section~\ref{sec:w_e} as we compare their multilingual versions for the zero-shot relation extraction task. Now, we present Word2Vec, GloVe, and ELMo.
 
 
 \paragraph{Word2Vec} \cite{mikolov2013models} proposes two log-linear models, the skip-gram (SG), and the Continuous Bag-of-Words (CBOW). Skip-gram model trains a network to predict the word given the context in which the word appears. While the CBOW does the inverse, it predicts the context of a word given that word. The network is a feedforword neural network with one hidden unit. We have an input layer which is projected onto a hidden layer using a matrix $W$, the word embeddings matrix, then the hidden layer is projected to the output layer using a matrix $\tilde{W}$, which is the word context embeddings. 
@@ -547,7 +547,7 @@ where  $E$ is a function for creating task specific embeddings parametrized by $
 \label{sec:transfer_learning}
 
 \paragraph{}
-In this section we will introduce the definition and the types of transfer learning based on the survey of~\cite{pan2010transfer}, and the thesis of~\cite{ruder2019neural} in which he applies transfer learning techniques to NLP. We will start with the general definition of transfer learning, present an overview of the different types, and then focus our attention on the techniques we will use in this work. 
+In this section we introduce the definition and the types of transfer learning based on the survey of~\cite{pan2010transfer}, and the thesis of~\cite{ruder2019neural} in which he applies transfer learning techniques to NLP. We start with the general definition of transfer learning, present an overview of the different types, and then focus our attention on the techniques we use in this work. 
 
 
 \subsection{Introduction}
@@ -562,7 +562,7 @@ Given a source domain $\mathcal{D}_S$ and learning task $\mathcal{T}_S$, a targe
 Since the domains and tasks are tuples, the inequality conditions in the transfer learning definition allows for five different scenarios grouped in two major settings:
 
 \begin{enumerate}[a -]
-    \item Inductive learning: the target task is different from the source task, while the source and target domains may or may not be the same. This setting labeled data in the target domain are required to induce a model.
+    \item Inductive learning: the target task is different from the source task, while the source and target domains may or may not be the same. In his setting labeled data in the target domain are required to induce a model.
         \begin{itemize}[- ]
             \item $P_S(Y_S) \neq P_T(Y_T)$. The prior distributions are different. 
             \item $P_S(Y_S | X_S) \neq P_T(Y_T, X_T)$. The conditional probability distributions are different, this can be solved with approaches like over-sampling, or SMOTE.
@@ -599,7 +599,7 @@ Given a multi-task problem consisting of $m$ tasks $X = \{T_{1}, \dots, T_{m}\}$
 
 this means that the goal of the model is to jointly optimize all the tasks, with all of them having the same importance. This could be changed in case we have a main task and the others are auxiliary task, used to help the main model achieve better generalization.
 
-We will present some general works on deep MTL architectures and examples of applications in natural language processing. A type of architecture for MTL consists of a network where the first $n$ layers are shared across all task, and the final layers are task specific. The hard parameter sharing architecture is simple to implement and helps with the reduction of overfitting, but it is only guaranteed to work with closely related task. Another method is the soft parameter sharing, in this case each task has his own layers, and the parameters are then regularized in order to make them similar. 
+We present some general works on deep MTL architectures and examples of applications in natural language processing. A type of architecture for MTL consists of a network where the first $n$ layers are shared across all task, and the final layers are task specific. The hard parameter sharing architecture is simple to implement and helps with the reduction of overfitting, but it is only guaranteed to work with closely related task. Another method is the soft parameter sharing, in this case each task has his own layers, and the parameters are then regularized in order to make them similar. 
 
 A more general framework that allows the network to learn what and how much to share across all task are the sluice networks~\citep{ruder2017sluice}. In a sluice network each hidden layer is split in $m$, with $m$ equal to the number of tasks. In a two task setup, we have that each layer is divided in two, one part for the task specific and the other for the sharing of parameters. The communications with the next layer for each task and across tasks is regulated by a two by two matrix with learnable weights. The matrix decides how much information from one task pass to the next layer of the same task, and how much to the next layer of the other task. This reduces the likely of negative transfer.
 
@@ -614,7 +614,7 @@ Sequential transfer learning is similar to MTL, but instead of having the task l
   \item we need to adapt to various tasks.
 \end{enumerate*}
 
-There are different techniques to perform sequential transfer learning, but we will focus on the fine-tuning methods as we use it for our experiments. 
+There are different techniques to perform sequential transfer learning, but we focus on the fine-tuning methods as we use it for our experiments. 
 
 \subsubsection{Fine-tuning}
 \paragraph{}
@@ -631,7 +631,7 @@ In the past years, the number of multilingual works has increased, creating more
 
 \newpage
 
-Most of the work on multilingual representation has been on word level, on which we will focus in the next section. However, there are also sentence level representations, such as in~\citep{conneau2018xnli} where they train the target language encoder to represent sentences in the same space as the source language encoder, allowing the transfer. Similarly, \cite{atetxe2018massively} train an encoder to represent sentences in a space that is agnostic from the language, but they pretrain the decoder on parallel corpora and concatenate a language ID to the decoder input that specifies the language to generate the output for.
+Most of the work on multilingual representation has been on word level, on which we focus in the next section. However, there are also sentence level representations, such as in~\citep{conneau2018xnli} where they train the target language encoder to represent sentences in the same space as the source language encoder, allowing the transfer. Similarly, \cite{atetxe2018massively} train an encoder to represent sentences in a space that is agnostic from the language, however, they pretrain the decoder on parallel corpora and concatenate a language ID to the decoder input that specifies the language to generate the output for.
 
 \subsubsection{Cross-lingual Word Representation}
 
@@ -660,13 +660,13 @@ where $d$ is the size of the embedding, $X$ and $Y$ are the embeddings of the le
 
 \paragraph{}
 
-In this section, we will present an overview of zero-shot learning. It studies how machine learning models could generalize to unseen categories.  In recent years, the number of zero-shot learning methods proposed every year has been increasing rapidly. We will give a description, discuss some general techniques, and show applications in natural language processing tasks. %We will give a definition, present some general ideas behind it, and review some related work applied to NLP.
+In this section, we  present an overview of zero-shot learning. It studies how machine learning models could generalize to unseen categories.  In recent years, the number of zero-shot learning methods proposed every year has been increasing rapidly. We give a description, discuss some general techniques, and show applications in natural language processing tasks. %We will give a definition, present some general ideas behind it, and review some related work applied to NLP.
 
 \subsection{Introduction}
 \paragraph{}
 Classification is one of the main tasks in machine learning; it is straightforward: given an example consisting of various feature, assign a label to the example. Thus, it has been thoroughly studied in different domains and tasks, from computer vision to natural language processing.  The main issue with this setup is that it does not generalize to new labels. Zero-shot learning~\citep{larochelle2008zeroshot} can be seen as an extreme version of few-shot learning, and one-shot learning~\citep{miller2002oneshot}.
 
-In their survey, ~\citet{xian2017zero} define the zero-shot learning task as follows: Given a training set $\mathcal{S} = \{(x_1, y_1), \dots, (x_n, y_n)\}$, with $y_i \in Y^{tr}$ the training set classes, the task is to learn a function $f: X \rightarrow Y$ that minimizes the loss function $J(\theta)$,and $F$ is a compatibility function that gives how compatible the input and the label are: 
+In their survey, ~\citet{xian2017zero} define the zero-shot learning task as follows: Given a training set $\mathcal{S} = \{(x_1, y_1), \dots, (x_n, y_n)\}$, with $y_i \in Y^{tr}$ the training set classes, the task is to learn a function $f: X \rightarrow Y$ that minimizes the loss function $J(\theta)$, and $F$ is a compatibility function that gives how compatible the input and the label are: 
 
 \begin{equation}
 \begin{split}
